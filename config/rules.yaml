@@ -186,6 +186,8 @@ custom_rules:
   - DOMAIN-SUFFIX,geeks3d.com,🚀海外代理
   #🌐全球直连
   - DOMAIN-SUFFIX,cn.download.nvidia.com,🌐全球直连
+  - IP-CIDR,8.138.95.158,🌐全球直连
+
   #🌐全球直连_steam下载
   - DOMAIN-SUFFIX,steamcontent.com,🌐全球直连
   - DOMAIN-SUFFIX,api.steampowered.com,🌐全球直连
