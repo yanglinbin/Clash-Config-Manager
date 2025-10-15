@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 
 class UpdateService:
-    def __init__(self, config_file="config.ini"):
+    def __init__(self, config_file="config/config.ini"):
         self.config_file = config_file
         self.config = configparser.ConfigParser()
         self.load_config()
@@ -312,7 +312,7 @@ def main():
     parser.add_argument("--daemon", action="store_true", help="以守护进程模式运行")
     parser.add_argument("--once", action="store_true", help="只执行一次更新检查")
     parser.add_argument("--status", action="store_true", help="显示服务状态")
-    parser.add_argument("--config", default="config.ini", help="配置文件路径")
+    parser.add_argument("--config", default="config/config.ini", help="配置文件路径")
 
     args = parser.parse_args()
 

@@ -32,7 +32,7 @@ app = Flask(__name__)
 
 
 class WebhookServer:
-    def __init__(self, config_file="config.ini"):
+    def __init__(self, config_file="config/config.ini"):
         self.config_file = config_file
         self.config = configparser.ConfigParser()
         self.load_config()

@@ -161,13 +161,14 @@ deploy_app() {
     mkdir -p $INSTALL_DIR/app/output
     mkdir -p $INSTALL_DIR/app/backups
     
-    # 确保配置文件存在
-    if [[ ! -f "$INSTALL_DIR/app/config.ini" ]]; then
+    # 确保配置文件存在（config.ini 应该在 config 目录）
+    if [[ ! -f "$INSTALL_DIR/app/config/config.ini" ]]; then
         if [[ -f "$INSTALL_DIR/app/config/config.ini.example" ]]; then
-            log_warn "config.ini 不存在，从示例文件创建"
-            cp $INSTALL_DIR/app/config/config.ini.example $INSTALL_DIR/app/config.ini
+            log_warn "config/config.ini 不存在，从示例文件创建"
+            cp $INSTALL_DIR/app/config/config.ini.example $INSTALL_DIR/app/config/config.ini
         else
-            log_error "配置文件不存在，请先创建 config.ini"
+            log_error "配置文件不存在，请先创建 config/config.ini"
+            log_error "请从项目目录复制 config.ini 到部署目录的 config/ 文件夹"
             exit 1
         fi
     fi
@@ -339,13 +340,13 @@ show_info() {
     
     echo -e "${GREEN}==================== 部署信息 ====================${NC}"
     echo -e "安装目录: $INSTALL_DIR"
-    echo -e "配置文件: $INSTALL_DIR/app/config.ini"
+    echo -e "配置文件: $INSTALL_DIR/app/config/config.ini"
     echo -e "规则文件: $INSTALL_DIR/app/config/rules.yaml"
     echo -e "日志目录: $INSTALL_DIR/logs/"
     echo -e ""
     echo -e "${BLUE}下一步操作:${NC}"
     echo -e "1. 编辑配置文件，设置你的代理提供商:"
-    echo -e "   nano $INSTALL_DIR/app/config.ini"
+    echo -e "   nano $INSTALL_DIR/app/config/config.ini"
     echo -e ""
     echo -e "2. 将以下 Nginx 配置添加到你现有的网站配置中:"
     echo -e "   cat $INSTALL_DIR/nginx-config-example.conf"

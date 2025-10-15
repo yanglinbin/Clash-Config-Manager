@@ -2,7 +2,7 @@
 .env
 
 # 配置文件（包含代理订阅链接等敏感信息）
-config.ini
+config/config.ini
 
 # 生成的配置文件
 output/clash_profile.yaml

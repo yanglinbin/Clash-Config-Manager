@@ -12,10 +12,10 @@ git clone <your-repo-url>
 cd clash_profile
 
 # 创建配置文件
-cp config/config.ini.example config.ini
+cp config/config.ini.example config/config.ini
 
 # 编辑配置，填入订阅链接
-nano config.ini
+nano config/config.ini
 ```
 
 ### 2. 本地测试
@@ -63,14 +63,14 @@ cat /opt/clash-config-server/nginx-config-example.conf
 
 ## 配置文件
 
-- `config.ini` - 订阅源、地区、过滤规则
+- `config/config.ini` - 订阅源、地区、过滤规则
 - `rules.yaml` - 代理组、规则集配置
 - `serverconfig.ini` - 服务器部署参数
 
 ## 文档
 
 - [完整部署文档](DEPLOY.md) - 超详细部署指南
-- [配置说明](config.ini.example) - 配置文件示例
+- [配置说明](config/config.ini.example) - 配置文件示例
 
 ## 服务管理
 
@@ -87,7 +87,7 @@ journalctl -u clash-webhook -f
 
 ## 安全提示
 
-⚠️ **不要**将 `config.ini` 提交到 Git！它包含敏感的订阅链接。
+⚠️ **不要**将 `config/config.ini` 提交到 Git！它包含敏感的订阅链接。
 
 ## License
 
