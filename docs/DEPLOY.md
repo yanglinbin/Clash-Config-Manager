@@ -61,7 +61,7 @@
 │         │                   │                   │           │
 │         ▼                   ▼                   ▼           │
 │  ┌─────────────────────────────────────────────────────┐  │
-│  │        配置生成器 (generate_clash_config.py)        │  │
+│  │        配置生成器 (main.py -> src/generate_clash_config.py)        │  │
 │  └─────────────────────────────────────────────────────┘  │
 │                            │                                │
 │         ┌──────────────────┼──────────────────┐           │
@@ -415,7 +415,7 @@ chmod +x scripts/deploy_standalone.sh
 ==================== 部署信息 ====================
 安装目录: /opt/clash-config-server
 配置文件: /opt/clash-config-server/app/config.ini
-规则文件: /opt/clash-config-server/app/rules.yaml
+规则文件: /opt/clash-config-server/app/config/rules.yaml
 日志目录: /opt/clash-config-server/logs/
 
 下一步操作:
@@ -494,7 +494,7 @@ server {
     
     # 配置文件访问
     location /clash_profile.yaml {
-        alias /opt/clash-config-server/app/clash_profile.yaml;
+        alias /opt/clash-config-server/app/output/clash_profile.yaml;
         add_header Content-Type "text/plain; charset=utf-8";
         add_header Cache-Control "no-cache, no-store, must-revalidate";
         add_header Pragma "no-cache";
@@ -570,7 +570,7 @@ server {
     
     # 配置文件访问
     location /clash_profile.yaml {
-        alias /opt/clash-config-server/app/clash_profile.yaml;
+        alias /opt/clash-config-server/app/output/clash_profile.yaml;
         add_header Content-Type "text/plain; charset=utf-8";
         add_header Cache-Control "no-cache, no-store, must-revalidate";
         add_header Pragma "no-cache";
@@ -1094,11 +1094,14 @@ python main.py --config config.test.ini
 /opt/clash-config-server/
 ├── app/
 │   ├── config.ini              # 核心配置（不要提交到 Git）
-│   ├── serverconfig.ini        # 服务器配置
-│   ├── rules.yaml              # 规则配置
-│   ├── generate_clash_config.py
-│   ├── webhook_server.py
-│   ├── update_service.py
+│   ├── src/                    # 源代码目录
+│   │   ├── generate_clash_config.py
+│   │   ├── webhook_server.py
+│   │   └── update_service.py
+│   ├── config/                # 配置文件目录
+│   │   ├── serverconfig.ini
+│   │   └── rules.yaml
+│   ├── main.py                # 主入口脚本
 │   ├── clash_profile.yaml      # 生成的配置（不要提交到 Git）
 │   ├── clash_generator.log
 │   ├── webhook.log

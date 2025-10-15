@@ -72,7 +72,7 @@ pip install -r requirements.txt
 
 ```bash
 # 运行配置生成器
-python generate_clash_config.py
+python main.py
 ```
 
 如果成功，你会看到：
@@ -295,7 +295,7 @@ cd /opt/clash-config-server/app
 nano config.ini
 
 # 手动重新生成
-sudo -u clash /opt/clash-config-server/venv/bin/python generate_clash_config.py
+sudo -u clash /opt/clash-config-server/venv/bin/python main.py
 
 # 重启服务
 systemctl restart clash-webhook

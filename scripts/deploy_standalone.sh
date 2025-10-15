@@ -266,7 +266,7 @@ start_services() {
     
     # 首次生成配置
     cd $INSTALL_DIR/app
-    sudo -u $SERVICE_USER $INSTALL_DIR/venv/bin/python generate_clash_config.py
+    sudo -u $SERVICE_USER $INSTALL_DIR/venv/bin/python main.py
     
     log_info "服务启动完成"
 }
@@ -281,7 +281,7 @@ generate_nginx_config() {
 
 # 配置文件访问
 location /clash_profile.yaml {
-    alias $INSTALL_DIR/app/clash_profile.yaml;
+    alias $INSTALL_DIR/app/output/clash_profile.yaml;
     add_header Content-Type "text/plain; charset=utf-8";
     add_header Cache-Control "no-cache, no-store, must-revalidate";
     add_header Pragma "no-cache";
@@ -340,7 +340,7 @@ show_info() {
     echo -e "${GREEN}==================== 部署信息 ====================${NC}"
     echo -e "安装目录: $INSTALL_DIR"
     echo -e "配置文件: $INSTALL_DIR/app/config.ini"
-    echo -e "规则文件: $INSTALL_DIR/app/rules.yaml"
+    echo -e "规则文件: $INSTALL_DIR/app/config/rules.yaml"
     echo -e "日志目录: $INSTALL_DIR/logs/"
     echo -e ""
     echo -e "${BLUE}下一步操作:${NC}"
