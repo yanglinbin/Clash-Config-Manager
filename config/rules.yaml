@@ -313,6 +313,7 @@ custom_rules:
   # cursor
 
   - DOMAIN-SUFFIX,cursor.sh, 🤖AI平台
+  - PROCESS-NAME,cursor, 🤖AI平台
 
   # AI 平台规则
   - DOMAIN-SUFFIX,anthropic.com, 🤖AI平台
