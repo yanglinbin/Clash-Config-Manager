@@ -310,7 +310,7 @@ custom_rules:
   - DOMAIN-SUFFIX,api.multiviewer.dev,🎬海外视频
   - PROCESS-NAME,MultiViewer.exe,🎬海外视频
 
-  # cursor（2次测试 webhook 触发）
+  # cursor（3次测试 webhook 触发）
 
   - DOMAIN-SUFFIX,cursor.sh, 🤖AI平台
   - PROCESS-NAME,cursor, 🤖AI平台
