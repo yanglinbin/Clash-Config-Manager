@@ -310,8 +310,11 @@ custom_rules:
   - DOMAIN-SUFFIX,api.multiviewer.dev,🎬海外视频
   - PROCESS-NAME,MultiViewer.exe,🎬海外视频
 
-  # AI 平台规则
+  # cursor
 
+  - DOMAIN-SUFFIX,cursor.sh, 🤖AI平台
+
+  # AI 平台规则
   - DOMAIN-SUFFIX,anthropic.com, 🤖AI平台
   - DOMAIN-SUFFIX,claude.ai, 🤖AI平台
   - DOMAIN-KEYWORD,claude, 🤖AI平台
