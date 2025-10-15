@@ -148,9 +148,12 @@ class WebhookServer:
 
             # 检查是否有相关文件变更
             relevant_files = [
-                "config.ini",
+                "config/config.ini",
+                "config/rules.yaml",
                 "src/generate_clash_config.py",
                 "src/webhook_server.py",
+                "src/update_service.py",
+                "main.py",
             ]
             has_relevant_changes = False
 
