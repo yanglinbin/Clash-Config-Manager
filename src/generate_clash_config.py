@@ -266,7 +266,7 @@ class ClashConfigGenerator:
 
     def get_rule_providers(self) -> Dict[str, Any]:
         """获取规则集配置"""
-        return self.rules_config.get("rule_providers", {})
+        return self.rules_config.get("rule-providers", {})
 
     def get_custom_rules(self) -> List[str]:
         """获取自定义规则"""
