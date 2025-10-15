@@ -269,9 +269,10 @@ def status():
     }
 
     # 检查配置文件是否存在
-    config_exists = Path("output/clash_profile.yaml").exists()
+    config_file_path = Path("/opt/clash-config-server/app/output/clash_profile.yaml")
+    config_exists = config_file_path.exists()
     if config_exists:
-        config_stat = Path("output/clash_profile.yaml").stat()
+        config_stat = config_file_path.stat()
         status_info["config_file_exists"] = True
         status_info["config_file_size"] = config_stat.st_size
         status_info["config_file_modified"] = datetime.fromtimestamp(
@@ -414,7 +415,9 @@ def index():
             else "从未更新"
         ),
         config_exists=(
-            "✅ 存在" if Path("output/clash_profile.yaml").exists() else "❌ 不存在"
+            "✅ 存在"
+            if Path("/opt/clash-config-server/app/output/clash_profile.yaml").exists()
+            else "❌ 不存在"
         ),
         webhook_configured=(
             "✅ 已配置" if webhook_server.webhook_secret else "❌ 未配置"
