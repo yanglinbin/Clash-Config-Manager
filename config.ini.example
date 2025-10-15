@@ -1,0 +1,42 @@
+[proxy_providers]
+# 代理提供者配置
+# 格式: 配置名称 = 订阅URL
+# 示例:
+# PROVIDER1 = http://your-subscription-url-1
+# PROVIDER2 = https://your-subscription-url-2
+# PROVIDER3 = https://your-subscription-url-3
+
+[regions]
+# 地区关键词配置，用于自动分组
+# 格式: 地区名称 = emoji,匹配关键词1,匹配关键词2
+香港 = 🇭🇰,Hong Kong,HK,港,HongKong
+台湾 = 🇹🇼,Taiwan,TW,台,Taipei
+日本 = 🇯🇵,Japan,JP,日,Tokyo
+美国 = 🇺🇸,United States,US,美,America,USA
+新加坡 = 🇸🇬,Singapore,SG,新,狮城
+
+[filter]
+# 节点过滤规则
+# 包含以下关键字的节点将被排除，不会出现在自动选择组中
+exclude_keywords = 网址,剩余,流量,重置,套餐,如遇,永久,官方,群组,欢迎,官网,频道,个人,到期,续费
+
+[server]
+# 更新间隔（秒）
+update_interval = 3600
+
+# GitHub Webhook 密钥（请修改为强密码）
+webhook_secret = your_webhook_secret_here_change_this
+
+[files]
+# 配置文件路径
+rules_config = rules.yaml
+
+[clash]
+# Clash 基础配置
+port = 7890
+socks_port = 7891
+allow_lan = true
+mode = Rule
+log_level = info
+external_controller = :9090
+test_url = http://connectivitycheck.gstatic.com/generate_204
