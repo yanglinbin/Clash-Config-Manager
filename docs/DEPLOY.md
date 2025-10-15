@@ -283,7 +283,7 @@ pip install -r requirements.txt
 ### 步骤 2: 创建配置文件
 
 ```bash
-cp config.ini.example config.ini
+cp config/config.ini.example config.ini
 nano config.ini  # 或使用其他编辑器
 ```
 
@@ -292,7 +292,7 @@ nano config.ini  # 或使用其他编辑器
 ### 步骤 3: 测试生成
 
 ```bash
-python generate_clash_config.py
+python main.py
 ```
 
 ### 预期输出
@@ -345,7 +345,7 @@ cd clash_profile
 
 ```bash
 # 在服务器上创建配置
-cp config.ini.example config.ini
+cp config/config.ini.example config.ini
 nano config.ini
 
 # 填入你的订阅链接和 webhook_secret
@@ -364,10 +364,10 @@ nano serverconfig.ini
 
 ```bash
 # 添加执行权限
-chmod +x deploy_standalone.sh
+chmod +x scripts/deploy_standalone.sh
 
 # 运行部署（需要 root 权限）
-./deploy_standalone.sh
+./scripts/deploy_standalone.sh
 ```
 
 ### 部署过程
@@ -786,7 +786,7 @@ cd /opt/clash-config-server/app
 sudo nano config.ini
 
 # 手动重新生成配置
-sudo -u clash /opt/clash-config-server/venv/bin/python generate_clash_config.py
+sudo -u clash /opt/clash-config-server/venv/bin/python main.py
 
 # 重启服务（如果修改了服务器配置）
 systemctl restart clash-webhook
@@ -853,7 +853,7 @@ cat /opt/clash-config-server/app/config.ini
 
 # 3. 手动运行生成器查看错误
 cd /opt/clash-config-server/app
-sudo -u clash /opt/clash-config-server/venv/bin/python generate_clash_config.py
+sudo -u clash /opt/clash-config-server/venv/bin/python main.py
 
 # 4. 检查订阅链接是否有效
 curl -I "你的订阅URL"
@@ -1081,7 +1081,7 @@ apt install mailutils
 cp config.ini config.test.ini
 
 # 使用不同配置运行
-python generate_clash_config.py --config config.test.ini
+python main.py --config config.test.ini
 ```
 
 ---
@@ -1136,7 +1136,7 @@ curl -X POST http://localhost:5000/manual-update
 
 # 配置测试
 nginx -t
-python generate_clash_config.py
+python main.py
 
 # 备份
 tar -czf ~/clash-backup.tar.gz /opt/clash-config-server/

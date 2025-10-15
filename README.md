@@ -12,7 +12,7 @@ git clone <your-repo-url>
 cd clash_profile
 
 # 创建配置文件
-cp config.ini.example config.ini
+cp config/config.ini.example config.ini
 
 # 编辑配置，填入订阅链接
 nano config.ini
@@ -22,7 +22,7 @@ nano config.ini
 
 ```bash
 pip install -r requirements.txt
-python generate_clash_config.py
+python main.py
 ```
 
 ### 3. 服务器部署

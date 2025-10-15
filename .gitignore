@@ -5,11 +5,15 @@
 config.ini
 
 # 生成的配置文件
-clash_profile.yaml
+output/clash_profile.yaml
+output/*.yaml
 
 # 服务器部署相关
 nginx-config-example.conf
 backups/
+
+# 日志文件
+logs/*.log
 
 # Python 相关
 __pycache__/

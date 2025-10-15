@@ -1,0 +1,550 @@
+# Clash 规则配置文件
+# 包含所有硬编码的规则、代理组配置等
+
+# 规则集配置
+rule-providers:
+  reject:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt"
+    path: ./ruleset/reject.yaml
+    interval: 86400
+
+  icloud:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt"
+    path: ./ruleset/icloud.yaml
+    interval: 86400
+
+  apple:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt"
+    path: ./ruleset/apple.yaml
+    interval: 86400
+
+  google:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt"
+    path: ./ruleset/google.yaml
+    interval: 86400
+
+  proxy:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt"
+    path: ./ruleset/proxy.yaml
+    interval: 86400
+
+  direct:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt"
+    path: ./ruleset/direct.yaml
+    interval: 86400
+
+  private:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt"
+    path: ./ruleset/private.yaml
+    interval: 86400
+
+  gfw:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt"
+    path: ./ruleset/gfw.yaml
+    interval: 86400
+
+  tld-not-cn:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.txt"
+    path: ./ruleset/tld-not-cn.yaml
+    interval: 86400
+
+  telegramcidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt"
+    path: ./ruleset/telegramcidr.yaml
+    interval: 86400
+
+  cncidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt"
+    path: ./ruleset/cncidr.yaml
+    interval: 86400
+
+  lancidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt"
+    path: ./ruleset/lancidr.yaml
+    interval: 86400
+
+  youtube:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/snapei/clash-pro-rules@release/youtube.txt"
+    path: ./ruleset/youtube.yaml
+    interval: 86400
+
+  applications:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt"
+    path: ./ruleset/applications.yaml
+    interval: 86400
+
+# 代理组配置
+proxy_groups:
+  # 主要代理组配置
+  main_groups:
+    - name: "🚀海外代理"
+      type: select
+      description: "通用海外代理，适用于大部分海外网站"
+
+    - name: "✈️Telegram"
+      type: select
+      description: "Telegram 专用代理设置"
+
+    - name: "🤖AI平台"
+      type: select
+      description: "针对 ChatGPT、Claude 等 AI 平台优化"
+
+    - name: "🎬YouTube"
+      type: select
+      description: "YouTube 专用代理"
+
+    - name: "🎬海外视频"
+      type: select
+      description: "其他海外视频平台"
+
+    - name: "🎬Netflix"
+      type: select
+      description: "Netflix 专用代理"
+
+    - name: "🎬哔哩哔哩"
+      type: select
+      description: "哔哩哔哩专用设置"
+
+    - name: "🔍Google"
+      type: select
+      description: "Google 服务专用"
+
+    - name: "🤖Copilot"
+      type: select
+      description: "Microsoft Copilot 专用"
+
+    - name: "🔍Microsoft_Bing"
+      type: select
+      description: "Bing 搜索专用"
+
+    - name: "☁️OneDrive"
+      type: select
+      description: "OneDrive 云盘专用"
+
+    - name: "☁️微软服务"
+      type: select
+      description: "其他微软服务"
+
+    - name: "🍎Apple"
+      type: select
+      description: "Apple 服务专用"
+
+    - name: "🍎iCloud"
+      type: select
+      description: "iCloud 专用"
+
+    - name: "🎮游戏平台"
+      type: select
+      description: "Steam、Epic、PlayStation 等游戏平台"
+
+    - name: "🌐全球直连"
+      type: select
+      description: "直连访问"
+
+    - name: "🐟漏网之鱼"
+      type: select
+      description: "兜底规则"
+
+  # 特殊代理组（不使用代理提供商）
+  special_groups:
+    - name: "🛑广告拦截"
+      type: select
+      proxies: ["REJECT", "DIRECT"]
+      description: "广告拦截设置"
+
+# 自定义规则
+custom_rules:
+  #🚀海外代理
+  - DOMAIN-SUFFIX,geeks3d.com,🚀海外代理
+  #🌐全球直连
+  - DOMAIN-SUFFIX,cn.download.nvidia.com,🌐全球直连
+  #🌐全球直连_steam下载
+  - DOMAIN-SUFFIX,steamcontent.com,🌐全球直连
+  - DOMAIN-SUFFIX,api.steampowered.com,🌐全球直连
+  - DOMAIN-SUFFIX,*.cm.steampowered.com,🌐全球直连
+  - DOMAIN-SUFFIX,*.steamserver.net,🌐全球直连
+  - IP-CIDR,103.10.124.0/24,🌐全球直连
+  - IP-CIDR,103.10.125.0/24,🌐全球直连
+  - IP-CIDR,102.10.125.0/24,🌐全球直连
+  - IP-CIDR,103.28.54.0/23,🌐全球直连
+  - IP-CIDR,103.28.54.0/24,🌐全球直连
+  - IP-CIDR,146.66.152.0/23,🌐全球直连
+  - IP-CIDR,146.66.155.0/23,🌐全球直连
+  - IP-CIDR,153.254.86.0/23,🌐全球直连
+  - IP-CIDR,155.133.224.0/22,🌐全球直连
+  - IP-CIDR,155.133.226.0/23,🌐全球直连
+  - IP-CIDR,155.133.227.0/23,🌐全球直连
+  - IP-CIDR,155.133.230.0/23,🌐全球直连
+  - IP-CIDR,155.133.232.0/23,🌐全球直连
+  - IP-CIDR,155.133.233.0/23,🌐全球直连
+  - IP-CIDR,155.133.234.0/23,🌐全球直连
+  - IP-CIDR,155.133.236.0/22,🌐全球直连
+  - IP-CIDR,155.133.238.0/23,🌐全球直连
+  - IP-CIDR,155.133.239.0/23,🌐全球直连
+  - IP-CIDR,155.133.240.0/22,🌐全球直连
+  - IP-CIDR,155.133.245.0/23,🌐全球直连
+  - IP-CIDR,155.133.246.0/23,🌐全球直连
+  - IP-CIDR,155.133.248.0/23,🌐全球直连
+  - IP-CIDR,155.133.249.0/23,🌐全球直连
+  - IP-CIDR,155.133.250.0/23,🌐全球直连
+  - IP-CIDR,155.133.251.0/23,🌐全球直连
+  - IP-CIDR,155.133.252.0/23,🌐全球直连
+  - IP-CIDR,155.133.253.0/23,🌐全球直连
+  - IP-CIDR,155.133.254.0/23,🌐全球直连
+  - IP-CIDR,155.133.255.0/23,🌐全球直连
+  - IP-CIDR,162.254.192.0/23,🌐全球直连
+  - IP-CIDR,162.254.193.0/23,🌐全球直连
+  - IP-CIDR,162.254.194.0/22,🌐全球直连
+  - IP-CIDR,162.254.195.0/23,🌐全球直连
+  - IP-CIDR,162.254.196.0/23,🌐全球直连
+  - IP-CIDR,162.254.197.0/23,🌐全球直连
+  - IP-CIDR,162.254.198.0/23,🌐全球直连
+  - IP-CIDR,162.254.199.0/23,🌐全球直连
+  - IP-CIDR,185.25.182.0/23,🌐全球直连
+  - IP-CIDR,185.25.183.0/23,🌐全球直连
+  - IP-CIDR,190.217.33.0/23,🌐全球直连
+  - IP-CIDR,192.69.96.0/21,🌐全球直连
+  - IP-CIDR,205.185.194.0/23,🌐全球直连
+  - IP-CIDR,205.196.6.0/23,🌐全球直连
+  - IP-CIDR,208.64.200.0/23,🌐全球直连
+  - IP-CIDR,208.64.201.0/23,🌐全球直连
+  - IP-CIDR,208.64.202.0/23,🌐全球直连
+  - IP-CIDR,208.64.203.0/23,🌐全球直连
+  - IP-CIDR,208.78.164.0/22,🌐全球直连
+
+  # 游戏平台规则
+
+  # Epic Games
+  - DOMAIN-SUFFIX,epicgames.com, 🎮游戏平台
+  - DOMAIN-SUFFIX,epicgames.dev, 🎮游戏平台
+  - DOMAIN-SUFFIX,helpshift.com, 🎮游戏平台
+  - DOMAIN-SUFFIX,paragon.com, 🎮游戏平台
+  - DOMAIN-SUFFIX,unrealengine.com, 🎮游戏平台
+
+    # EA Origin
+  - DOMAIN,cloudsync-prod.s3.amazonaws.com, 🎮游戏平台
+  - DOMAIN,eaasserts-a.akamaihd.net, 🎮游戏平台
+  - DOMAIN,origin-a.akamaihd.net, 🎮游戏平台
+  - DOMAIN,originasserts.akamaized.net, 🎮游戏平台
+  - DOMAIN,rtm.tnt-ea.com, 🎮游戏平台
+  - DOMAIN-SUFFIX,ea.com, 🎮游戏平台
+  - DOMAIN-SUFFIX,origin.com, 🎮游戏平台
+
+    # PlayStation
+  - DOMAIN-SUFFIX,playstation.com, 🎮游戏平台
+  - DOMAIN-SUFFIX,playstation.net, 🎮游戏平台
+  - DOMAIN-SUFFIX,playstationnetwork.com, 🎮游戏平台
+  - DOMAIN-SUFFIX,sony.com, 🎮游戏平台
+  - DOMAIN-SUFFIX,sonyentertainmentnetwork.com, 🎮游戏平台
+
+    # Steam
+  - DOMAIN-SUFFIX,steamcommunity.com,🎮游戏平台
+  - DOMAIN,steambroadcast.akamaized.net, 🎮游戏平台
+  - DOMAIN,steamcommunity-a.akamaihd.net, 🎮游戏平台
+  - DOMAIN,steampipe.akamaized.net, 🎮游戏平台
+  - DOMAIN,steamstore-a.akamaihd.net, 🎮游戏平台
+  - DOMAIN,steamusercontent-a.akamaihd.net, 🎮游戏平台
+  - DOMAIN,steamuserimages-a.akamaihd.net, 🎮游戏平台
+  - DOMAIN-SUFFIX,fanatical.com, 🎮游戏平台
+  - DOMAIN-SUFFIX,humblebundle.com, 🎮游戏平台
+  - DOMAIN-SUFFIX,playartifact.com, 🎮游戏平台
+  - DOMAIN-SUFFIX,steam-chat.com, 🎮游戏平台
+  - DOMAIN-SUFFIX,steamcommunity.com, 🎮游戏平台
+  - DOMAIN-SUFFIX,steamgames.com, 🎮游戏平台
+  - DOMAIN-SUFFIX,steamstat.us, 🎮游戏平台
+  - DOMAIN-SUFFIX,steamstatic.com, 🎮游戏平台
+  - DOMAIN-SUFFIX,underlords.com, 🎮游戏平台
+  - DOMAIN-SUFFIX,valvesoftware.com, 🎮游戏平台
+
+    # Nintendo
+  - DOMAIN-SUFFIX,nintendo-europe.com, 🎮游戏平台
+  - DOMAIN-SUFFIX,nintendo.be, 🎮游戏平台
+  - DOMAIN-SUFFIX,nintendo.co.jp, 🎮游戏平台
+  - DOMAIN-SUFFIX,nintendo.co.uk, 🎮游戏平台
+  - DOMAIN-SUFFIX,nintendo.com, 🎮游戏平台
+  - DOMAIN-SUFFIX,nintendo.com.au, 🎮游戏平台
+  - DOMAIN-SUFFIX,nintendo.de, 🎮游戏平台
+  - DOMAIN-SUFFIX,nintendo.es, 🎮游戏平台
+  - DOMAIN-SUFFIX,nintendo.eu, 🎮游戏平台
+  - DOMAIN-SUFFIX,nintendo.fr, 🎮游戏平台
+  - DOMAIN-SUFFIX,nintendo.it, 🎮游戏平台
+  - DOMAIN-SUFFIX,nintendo.jp, 🎮游戏平台
+  - DOMAIN-SUFFIX,nintendo.net, 🎮游戏平台
+  - DOMAIN-SUFFIX,nintendo.nl, 🎮游戏平台
+  - DOMAIN-SUFFIX,nintendowifi.net, 🎮游戏平台
+  - DOMAIN-SUFFIX,playerinfinite.com, 🎮游戏平台
+  - DOMAIN-SUFFIX,xxality.cn, 🎮游戏平台
+
+  # 海外视频规则
+
+  - DOMAIN-SUFFIX,formula1.com, 🎬海外视频
+  - DOMAIN-SUFFIX,livetiming-proxy.multiviewer.dev,🎬海外视频
+  - DOMAIN-SUFFIX,api.multiviewer.dev,🎬海外视频
+  - PROCESS-NAME,MultiViewer.exe,🎬海外视频
+
+  # AI 平台规则
+
+  - DOMAIN-SUFFIX,anthropic.com, 🤖AI平台
+  - DOMAIN-SUFFIX,claude.ai, 🤖AI平台
+  - DOMAIN-KEYWORD,claude, 🤖AI平台
+  - DOMAIN-KEYWORD,anthropic, 🤖AI平台
+  - DOMAIN-KEYWORD,openai, 🤖AI平台
+  - DOMAIN-SUFFIX,auth0.com, 🤖AI平台
+  - DOMAIN-SUFFIX,challenges.cloudflare.com, 🤖AI平台
+  - DOMAIN-SUFFIX,chatgpt.com, 🤖AI平台
+  - DOMAIN-SUFFIX,client-api.arkoselabs.com, 🤖AI平台
+  - DOMAIN-SUFFIX,events.statsigapi.net, 🤖AI平台
+  - DOMAIN-SUFFIX,featuregates.org, 🤖AI平台
+  - DOMAIN-SUFFIX,identrust.com, 🤖AI平台
+  - DOMAIN-SUFFIX,intercom.io, 🤖AI平台
+  - DOMAIN-SUFFIX,intercomcdn.com, 🤖AI平台
+  - DOMAIN-SUFFIX,oaistatic.com, 🤖AI平台
+  - DOMAIN-SUFFIX,oaiusercontent.com, 🤖AI平台
+  - DOMAIN-SUFFIX,openai.com, 🤖AI平台
+  - DOMAIN-SUFFIX,openaiapi-site.azureedge.net, 🤖AI平台
+  - DOMAIN-SUFFIX,sentry.io, 🤖AI平台
+  - DOMAIN-SUFFIX,stripe.com, 🤖AI平台
+
+  # Netflix 规则
+
+  - DOMAIN-KEYWORD,apiproxy-device-prod-nlb-, 🎬Netflix
+  - DOMAIN-KEYWORD,dualstack.apiproxy-, 🎬Netflix
+  - DOMAIN-KEYWORD,netflixdnstest, 🎬Netflix
+  - DOMAIN,netflix.com.edgesuite.net, 🎬Netflix
+  - DOMAIN-SUFFIX,fast.com, 🎬Netflix
+  - DOMAIN-SUFFIX,netflix.com, 🎬Netflix
+  - DOMAIN-SUFFIX,netflix.net, 🎬Netflix
+  - DOMAIN-SUFFIX,netflixdnstest0.com, 🎬Netflix
+  - DOMAIN-SUFFIX,netflixdnstest1.com, 🎬Netflix
+  - DOMAIN-SUFFIX,netflixdnstest2.com, 🎬Netflix
+  - DOMAIN-SUFFIX,netflixdnstest3.com, 🎬Netflix
+  - DOMAIN-SUFFIX,netflixdnstest4.com, 🎬Netflix
+  - DOMAIN-SUFFIX,netflixdnstest5.com, 🎬Netflix
+  - DOMAIN-SUFFIX,netflixdnstest6.com, 🎬Netflix
+  - DOMAIN-SUFFIX,netflixdnstest7.com, 🎬Netflix
+  - DOMAIN-SUFFIX,netflixdnstest8.com, 🎬Netflix
+  - DOMAIN-SUFFIX,netflixdnstest9.com, 🎬Netflix
+  - DOMAIN-SUFFIX,nflxext.com, 🎬Netflix
+  - DOMAIN-SUFFIX,nflximg.com, 🎬Netflix
+  - DOMAIN-SUFFIX,nflximg.net, 🎬Netflix
+  - DOMAIN-SUFFIX,nflxso.net, 🎬Netflix
+  - DOMAIN-SUFFIX,nflxvideo.net, 🎬Netflix
+  - IP-CIDR,8.41.4.0/24, 🎬Netflix,no-resolve
+  - IP-CIDR,23.246.0.0/18, 🎬Netflix,no-resolve
+  - IP-CIDR,37.77.184.0/21, 🎬Netflix,no-resolve
+  - IP-CIDR,38.72.126.0/24, 🎬Netflix,no-resolve
+  - IP-CIDR,45.57.0.0/17, 🎬Netflix,no-resolve
+  - IP-CIDR,64.120.128.0/17, 🎬Netflix,no-resolve
+  - IP-CIDR,66.197.128.0/17, 🎬Netflix,no-resolve
+  - IP-CIDR,69.53.224.0/19, 🎬Netflix,no-resolve
+  - IP-CIDR,103.87.204.0/22, 🎬Netflix,no-resolve
+  - IP-CIDR,108.175.32.0/20, 🎬Netflix,no-resolve
+  - IP-CIDR,185.2.220.0/22, 🎬Netflix,no-resolve
+  - IP-CIDR,185.9.188.0/22, 🎬Netflix,no-resolve
+  - IP-CIDR,192.173.64.0/18, 🎬Netflix,no-resolve
+  - IP-CIDR,198.38.96.0/19, 🎬Netflix,no-resolve
+  - IP-CIDR,198.45.48.0/20, 🎬Netflix,no-resolve
+  - IP-CIDR,203.75.84.0/24, 🎬Netflix,no-resolve
+  - IP-CIDR,207.45.72.0/22, 🎬Netflix,no-resolve
+  - IP-CIDR,208.75.76.0/22, 🎬Netflix,no-resolve
+
+  # 哔哩哔哩规则
+
+  - DOMAIN,p-bstarstatic.akamaized.net, 🎬哔哩哔哩
+  - DOMAIN,p.bstarstatic.com, 🎬哔哩哔哩
+  - DOMAIN,upos-bstar-mirrorakam.akamaized.net, 🎬哔哩哔哩
+  - DOMAIN,upos-bstar1-mirrorakam.akamaized.net, 🎬哔哩哔哩
+  - DOMAIN,upos-hz-mirrorakam.akamaized.net, 🎬哔哩哔哩
+  - DOMAIN-SUFFIX,acgvideo.com, 🎬哔哩哔哩
+  - DOMAIN-SUFFIX,bilibili.com, 🎬哔哩哔哩
+  - DOMAIN-SUFFIX,bilibili.tv, 🎬哔哩哔哩
+  - IP-CIDR,45.43.32.234/32, 🎬哔哩哔哩,no-resolve
+  - IP-CIDR,103.151.150.0/23, 🎬哔哩哔哩,no-resolve
+  - IP-CIDR,119.29.29.29/32, 🎬哔哩哔哩,no-resolve
+  - IP-CIDR,128.1.62.200/32, 🎬哔哩哔哩,no-resolve
+  - IP-CIDR,128.1.62.201/32, 🎬哔哩哔哩,no-resolve
+  - IP-CIDR,150.116.92.250/32, 🎬哔哩哔哩,no-resolve
+  - IP-CIDR,164.52.33.178/32, 🎬哔哩哔哩,no-resolve
+  - IP-CIDR,164.52.33.182/32, 🎬哔哩哔哩,no-resolve
+  - IP-CIDR,164.52.76.18/32, 🎬哔哩哔哩,no-resolve
+  - IP-CIDR,203.107.1.33/32, 🎬哔哩哔哩,no-resolve
+  - IP-CIDR,203.107.1.34/32, 🎬哔哩哔哩,no-resolve
+  - IP-CIDR,203.107.1.65/32, 🎬哔哩哔哩,no-resolve
+  - IP-CIDR,203.107.1.66/32, 🎬哔哩哔哩,no-resolve
+  - DOMAIN,apiintl.biliapi.net, 🎬哔哩哔哩
+  - DOMAIN,upos-hz-mirrorakam.akamaized.net, 🎬哔哩哔哩
+  - DOMAIN-SUFFIX,acg.tv, 🎬哔哩哔哩
+  - DOMAIN-SUFFIX,acgvideo.com, 🎬哔哩哔哩
+  - DOMAIN-SUFFIX,b23.tv, 🎬哔哩哔哩
+  - DOMAIN-SUFFIX,bigfun.cn, 🎬哔哩哔哩
+  - DOMAIN-SUFFIX,bigfunapp.cn, 🎬哔哩哔哩
+  - DOMAIN-SUFFIX,biliapi.com, 🎬哔哩哔哩
+  - DOMAIN-SUFFIX,biliapi.net, 🎬哔哩哔哩
+  - DOMAIN-SUFFIX,bilibili.co, 🎬哔哩哔哩
+  - DOMAIN-SUFFIX,bilibili.com, 🎬哔哩哔哩
+  - DOMAIN-SUFFIX,bilibili.tv, 🎬哔哩哔哩
+  - DOMAIN-SUFFIX,biligame.com, 🎬哔哩哔哩
+  - DOMAIN-SUFFIX,biligame.net, 🎬哔哩哔哩
+  - DOMAIN-SUFFIX,biliintl.co, 🎬哔哩哔哩
+  - DOMAIN-SUFFIX,bilivideo.cn, 🎬哔哩哔哩
+  - DOMAIN-SUFFIX,bilivideo.com, 🎬哔哩哔哩
+  - DOMAIN-SUFFIX,hdslb.com, 🎬哔哩哔哩
+  - DOMAIN-SUFFIX,im9.com, 🎬哔哩哔哩
+  - DOMAIN-SUFFIX,smtcdns.net, 🎬哔哩哔哩
+
+  # Copilot 规则
+
+  - DOMAIN-SUFFIX,copilot.microsoft.com, 🤖Copilot
+
+  # Microsoft Bing 规则
+
+  - DOMAIN-SUFFIX,bing.com, 🔍Microsoft_Bing
+  - DOMAIN-SUFFIX,bing.net, 🔍Microsoft_Bing
+
+  # 微软服务规则
+
+  - DOMAIN-KEYWORD,1drv, ☁️微软服务
+  - DOMAIN-KEYWORD,microsoft, ☁️微软服务
+  - DOMAIN-SUFFIX,aadrm.com, ☁️微软服务
+  - DOMAIN-SUFFIX,acompli.com, ☁️微软服务
+  - DOMAIN-SUFFIX,acompli.net, ☁️微软服务
+  - DOMAIN-SUFFIX,aka.ms, ☁️微软服务
+  - DOMAIN-SUFFIX,akadns.net, ☁️微软服务
+  - DOMAIN-SUFFIX,aspnetcdn.com, ☁️微软服务
+  - DOMAIN-SUFFIX,assets-yammer.com, ☁️微软服务
+  - DOMAIN-SUFFIX,azure.com, ☁️微软服务
+  - DOMAIN-SUFFIX,azure.net, ☁️微软服务
+  - DOMAIN-SUFFIX,azureedge.net, ☁️微软服务
+  - DOMAIN-SUFFIX,azureiotcentral.com, ☁️微软服务
+  - DOMAIN-SUFFIX,azurerms.com, ☁️微软服务
+  - DOMAIN-SUFFIX,bingapis.com, ☁️微软服务
+  - DOMAIN-SUFFIX,cloudapp.net, ☁️微软服务
+  - DOMAIN-SUFFIX,cloudappsecurity.com, ☁️微软服务
+  - DOMAIN-SUFFIX,edgesuite.net, ☁️微软服务
+  - DOMAIN-SUFFIX,gfx.ms, ☁️微软服务
+  - DOMAIN-SUFFIX,hotmail.com, ☁️微软服务
+  - DOMAIN-SUFFIX,live.com, ☁️微软服务
+  - DOMAIN-SUFFIX,live.net, ☁️微软服务
+  - DOMAIN-SUFFIX,lync.com, ☁️微软服务
+  - DOMAIN-SUFFIX,msappproxy.net, ☁️微软服务
+  - DOMAIN-SUFFIX,msauth.net, ☁️微软服务
+  - DOMAIN-SUFFIX,msauthimages.net, ☁️微软服务
+  - DOMAIN-SUFFIX,msecnd.net, ☁️微软服务
+  - DOMAIN-SUFFIX,msedge.net, ☁️微软服务
+  - DOMAIN-SUFFIX,msft.net, ☁️微软服务
+  - DOMAIN-SUFFIX,msftauth.net, ☁️微软服务
+  - DOMAIN-SUFFIX,msftauthimages.net, ☁️微软服务
+  - DOMAIN-SUFFIX,msftidentity.com, ☁️微软服务
+  - DOMAIN-SUFFIX,msidentity.com, ☁️微软服务
+  - DOMAIN-SUFFIX,msn.cn, ☁️微软服务
+  - DOMAIN-SUFFIX,msn.com, ☁️微软服务
+  - DOMAIN-SUFFIX,msocdn.com, ☁️微软服务
+  - DOMAIN-SUFFIX,msocsp.com, ☁️微软服务
+  - DOMAIN-SUFFIX,mstea.ms, ☁️微软服务
+  - DOMAIN-SUFFIX,o365weve.com, ☁️微软服务
+  - DOMAIN-SUFFIX,oaspapps.com, ☁️微软服务
+  - DOMAIN-SUFFIX,office.com, ☁️微软服务
+  - DOMAIN-SUFFIX,office.net, ☁️微软服务
+  - DOMAIN-SUFFIX,office365.com, ☁️微软服务
+  - DOMAIN-SUFFIX,officeppe.net, ☁️微软服务
+  - DOMAIN-SUFFIX,omniroot.com, ☁️微软服务
+  - DOMAIN-SUFFIX,onedrive.com, ☁️微软服务
+  - DOMAIN-SUFFIX,onenote.com, ☁️微软服务
+  - DOMAIN-SUFFIX,onenote.net, ☁️微软服务
+  - DOMAIN-SUFFIX,onestore.ms, ☁️微软服务
+  - DOMAIN-SUFFIX,outlook.com, ☁️微软服务
+  - DOMAIN-SUFFIX,outlookmobile.com, ☁️微软服务
+  - DOMAIN-SUFFIX,phonefactor.net, ☁️微软服务
+  - DOMAIN-SUFFIX,public-trust.com, ☁️微软服务
+  - DOMAIN-SUFFIX,sfbassets.com, ☁️微软服务
+  - DOMAIN-SUFFIX,sfx.ms, ☁️微软服务
+  - DOMAIN-SUFFIX,sharepoint.com, ☁️微软服务
+  - DOMAIN-SUFFIX,sharepointonline.com, ☁️微软服务
+  - DOMAIN-SUFFIX,skype.com, ☁️微软服务
+  - DOMAIN-SUFFIX,skypeassets.com, ☁️微软服务
+  - DOMAIN-SUFFIX,skypeforbusiness.com, ☁️微软服务
+  - DOMAIN-SUFFIX,staffhub.ms, ☁️微软服务
+  - DOMAIN-SUFFIX,svc.ms, ☁️微软服务
+  - DOMAIN-SUFFIX,sway-cdn.com, ☁️微软服务
+  - DOMAIN-SUFFIX,sway-extensions.com, ☁️微软服务
+  - DOMAIN-SUFFIX,sway.com, ☁️微软服务
+  - DOMAIN-SUFFIX,trafficmanager.net, ☁️微软服务
+  - DOMAIN-SUFFIX,uservoice.com, ☁️微软服务
+  - DOMAIN-SUFFIX,virtualearth.net, ☁️微软服务
+  - DOMAIN-SUFFIX,visualstudio.com, ☁️微软服务
+  - DOMAIN-SUFFIX,windows-ppe.net, ☁️微软服务
+  - DOMAIN-SUFFIX,windows.com, ☁️微软服务
+  - DOMAIN-SUFFIX,windows.net, ☁️微软服务
+  - DOMAIN-SUFFIX,windowsazure.com, ☁️微软服务
+  - DOMAIN-SUFFIX,windowsupdate.com, ☁️微软服务
+  - DOMAIN-SUFFIX,wunderlist.com, ☁️微软服务
+  - DOMAIN-SUFFIX,yammer.com, ☁️微软服务
+  - DOMAIN-SUFFIX,yammerusercontent.com, ☁️微软服务
+
+  # OneDrive 规则
+
+  - PROCESS-NAME,OneDrive, ☁️OneDrive
+  - PROCESS-NAME,OneDriveUpdater, ☁️OneDrive
+  - DOMAIN-KEYWORD,1drv, ☁️OneDrive
+  - DOMAIN-KEYWORD,onedrive, ☁️OneDrive
+  - DOMAIN-KEYWORD,skydrive, ☁️OneDrive
+  - DOMAIN-SUFFIX,livefilestore.com, ☁️OneDrive
+  - DOMAIN-SUFFIX,oneclient.sfx.ms, ☁️OneDrive
+  - DOMAIN-SUFFIX,onedrive.com, ☁️OneDrive
+  - DOMAIN-SUFFIX,onedrive.live.com, ☁️OneDrive
+  - DOMAIN-SUFFIX,photos.live.com, ☁️OneDrive
+  - DOMAIN-SUFFIX,sharepoint.com, ☁️OneDrive
+  - DOMAIN-SUFFIX,sharepointonline.com, ☁️OneDrive
+  - DOMAIN-SUFFIX,skydrive.wns.windows.com, ☁️OneDrive
+  - DOMAIN-SUFFIX,spoprod-a.akamaihd.net, ☁️OneDrive
+  - DOMAIN-SUFFIX,storage.live.com, ☁️OneDrive
+  - DOMAIN-SUFFIX,storage.msn.com, ☁️OneDrive
+  - DOMAIN-SUFFIX,onedrive.live.com, ☁️OneDrive
+
+# 规则集引用规则
+ruleset_rules:
+  - RULE-SET,applications,🌐全球直连
+  - DOMAIN,clash.razord.top,🌐全球直连
+  - DOMAIN,yacd.haishan.me,🌐全球直连
+  - RULE-SET,private,🌐全球直连
+  - RULE-SET,reject, 🛑广告拦截
+  - RULE-SET,icloud,🍎iCloud
+  - RULE-SET,apple,🍎Apple
+  - RULE-SET,google,🔍Google
+  - RULE-SET,proxy,🚀海外代理
+  - RULE-SET,direct,🌐全球直连
+  - RULE-SET,lancidr,🌐全球直连
+  - RULE-SET,cncidr,🌐全球直连
+  - RULE-SET,telegramcidr,✈️Telegram
+  - RULE-SET,youtube,🎬YouTube
+  - GEOIP,LAN,🌐全球直连
+  - GEOIP,CN,🌐全球直连
+  - MATCH,🐟漏网之鱼

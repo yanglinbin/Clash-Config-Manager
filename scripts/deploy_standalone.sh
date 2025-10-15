@@ -152,22 +152,42 @@ create_directories() {
 deploy_app() {
     log_step "部署应用文件..."
     
-    # 复制应用文件
-    cp generate_clash_config.py $INSTALL_DIR/app/
-    cp config.ini $INSTALL_DIR/app/
-    cp rules.yaml $INSTALL_DIR/app/
-    cp serverconfig.ini $INSTALL_DIR/app/ 2>/dev/null || log_warn "serverconfig.ini 不存在，跳过"
-    cp webhook_server.py $INSTALL_DIR/app/ 2>/dev/null || log_warn "webhook_server.py 不存在，跳过"
-    cp update_service.py $INSTALL_DIR/app/ 2>/dev/null || log_warn "update_service.py 不存在，跳过"
+    # 复制整个项目目录结构
+    log_info "复制项目文件..."
+    cp -r . $INSTALL_DIR/app/
+    
+    # 创建必要的目录
+    mkdir -p $INSTALL_DIR/app/logs
+    mkdir -p $INSTALL_DIR/app/output
+    mkdir -p $INSTALL_DIR/app/backups
+    
+    # 确保配置文件存在
+    if [[ ! -f "$INSTALL_DIR/app/config.ini" ]]; then
+        if [[ -f "$INSTALL_DIR/app/config/config.ini.example" ]]; then
+            log_warn "config.ini 不存在，从示例文件创建"
+            cp $INSTALL_DIR/app/config/config.ini.example $INSTALL_DIR/app/config.ini
+        else
+            log_error "配置文件不存在，请先创建 config.ini"
+            exit 1
+        fi
+    fi
     
     # 创建 Python 虚拟环境
     cd $INSTALL_DIR
     python3 -m venv venv
     source venv/bin/activate
-    pip install pyyaml requests flask gunicorn
+    
+    # 安装依赖
+    if [[ -f "$INSTALL_DIR/app/requirements.txt" ]]; then
+        pip install -r $INSTALL_DIR/app/requirements.txt
+    else
+        pip install pyyaml requests flask gunicorn configparser
+    fi
     
     # 设置权限
     chown -R $SERVICE_USER:$SERVICE_GROUP $INSTALL_DIR
+    chmod +x $INSTALL_DIR/app/main.py
+    chmod +x $INSTALL_DIR/app/src/*.py
     
     log_info "应用文件部署完成"
 }
@@ -188,7 +208,7 @@ User=$SERVICE_USER
 Group=$SERVICE_USER
 WorkingDirectory=$INSTALL_DIR/app
 Environment=PATH=$INSTALL_DIR/venv/bin
-ExecStart=$INSTALL_DIR/venv/bin/python webhook_server.py
+ExecStart=$INSTALL_DIR/venv/bin/python src/webhook_server.py
 Restart=always
 RestartSec=10
 StandardOutput=append:$INSTALL_DIR/logs/webhook.log
@@ -210,7 +230,7 @@ User=$SERVICE_USER
 Group=$SERVICE_USER
 WorkingDirectory=$INSTALL_DIR/app
 Environment=PATH=$INSTALL_DIR/venv/bin
-ExecStart=$INSTALL_DIR/venv/bin/python update_service.py
+ExecStart=$INSTALL_DIR/venv/bin/python src/update_service.py
 StandardOutput=append:$INSTALL_DIR/logs/updater.log
 StandardError=append:$INSTALL_DIR/logs/updater.log
 EOF

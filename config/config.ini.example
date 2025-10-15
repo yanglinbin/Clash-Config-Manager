@@ -29,7 +29,7 @@ webhook_secret = your_webhook_secret_here_change_this
 
 [files]
 # 配置文件路径
-rules_config = rules.yaml
+rules_config = config/rules.yaml
 
 [clash]
 # Clash 基础配置
@@ -40,3 +40,14 @@ mode = Rule
 log_level = info
 external_controller = :9090
 test_url = http://connectivitycheck.gstatic.com/generate_204
+
+# 是否为所有提供者生成所有地区组（false=只生成指定的组合）
+generate_all_region_groups = false
+
+[provider_regions]
+# 指定每个提供者支持的地区（如果 generate_all_region_groups=false）
+# 格式: 提供者名称 = 地区1,地区2,地区3
+# 如果不指定，则生成所有地区组
+XXAI = 香港,台湾,日本,美国,新加坡
+NAIYUN = 香港,台湾,日本,美国
+KITTY = 香港,日本,美国,新加坡
