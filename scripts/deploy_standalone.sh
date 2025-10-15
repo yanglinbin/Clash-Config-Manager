@@ -26,8 +26,8 @@ TIMER_NAME="clash-config-updater.timer"
 
 # 加载服务器配置文件
 load_server_config() {
-    if [[ -f "serverconfig.ini" ]]; then
-        log_info "正在加载 serverconfig.ini..."
+    if [[ -f "config/serverconfig.ini" ]]; then
+        log_info "正在加载 config/serverconfig.ini..."
         
         # 使用 Python 读取配置文件
         eval $(python3 << 'EOF'
@@ -35,7 +35,7 @@ import configparser
 import sys
 
 config = configparser.ConfigParser()
-config.read('serverconfig.ini', encoding='utf-8')
+config.read('config/serverconfig.ini', encoding='utf-8')
 
 # 导出为环境变量
 if 'deployment' in config:
@@ -65,7 +65,7 @@ EOF
         
         log_info "配置加载完成"
     else
-        log_warn "serverconfig.ini 不存在，使用默认配置"
+        log_warn "config/serverconfig.ini 不存在，使用默认配置"
     fi
 }
 

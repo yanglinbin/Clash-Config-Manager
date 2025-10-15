@@ -426,13 +426,13 @@ def main():
     """主函数"""
     # 从服务器配置文件读取设置
     server_config = configparser.ConfigParser()
-    if Path("serverconfig.ini").exists():
-        server_config.read("serverconfig.ini", encoding="utf-8")
+    if Path("config/serverconfig.ini").exists():
+        server_config.read("config/serverconfig.ini", encoding="utf-8")
         host = server_config.get("network", "webhook_host", fallback="127.0.0.1")
         port = server_config.getint("network", "webhook_port", fallback=5000)
     else:
         # 兼容旧配置
-        logger.warning("serverconfig.ini 不存在，使用默认配置")
+        logger.warning("config/serverconfig.ini 不存在，使用默认配置")
         host = "127.0.0.1"
         port = 5000
 
