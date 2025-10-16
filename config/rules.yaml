@@ -317,6 +317,10 @@ custom_rules:
   - DOMAIN-SUFFIX,cursor.sh, 🤖AI平台
   - PROCESS-NAME,cursor, 🤖AI平台
 
+  # jetbrains ai
+
+  - DOMAIN-SUFFIX,jetbrains.ai, 🤖AI平台
+
   # AI 平台规则
   - DOMAIN-SUFFIX,anthropic.com, 🤖AI平台
   - DOMAIN-SUFFIX,claude.ai, 🤖AI平台
