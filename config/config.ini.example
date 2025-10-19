@@ -44,6 +44,10 @@ test_url = http://connectivitycheck.gstatic.com/generate_204
 # 是否为所有提供者生成所有地区组（false=只生成指定的组合）
 generate_all_region_groups = false
 
+# 使用合并的地区组（将所有提供者的同地区节点合并到一个组）
+# true=合并地区组（推荐），false=按提供者分组
+use_merged_region_groups = true
+
 [provider_regions]
 # 指定每个提供者支持的地区（如果 generate_all_region_groups=false）
 # 格式: 提供者名称 = 地区1,地区2,地区3
@@ -51,3 +55,33 @@ generate_all_region_groups = false
 XXAI = 香港,台湾,日本,美国,新加坡
 NAIYUN = 香港,台湾,日本,美国
 KITTY = 香港,日本,美国,新加坡
+
+[merged_regions]
+# 合并地区组配置（仅当 use_merged_region_groups=true 时生效）
+# 格式: 地区名称 = 代理组类型
+# 类型说明:
+#   select          - 手动选择（完全用户控制，最稳定）
+#   url-test        - 自动选择低延迟节点（可能频繁切换）
+#   fallback        - 故障转移（推荐：只在节点失败时切换，连接稳定）
+#   load-balance    - 负载均衡（适合下载，但会破坏会话）
+
+# 默认类型（如果某个地区未单独配置）
+default_type = fallback
+
+# 各地区配置（可以为不同地区配置不同类型）
+香港 = fallback
+台湾 = fallback
+日本 = fallback
+美国 = fallback
+新加坡 = fallback
+
+[load_balance_regions]
+# 需要额外创建 load-balance 组的地区
+# 这些地区会额外生成一个负载均衡组，用于大文件下载等场景
+# 格式: 地区名称 = 策略
+# 策略:
+#   consistent-hashing  - 一致性哈希（推荐：相同域名使用同一节点）
+#   round-robin         - 轮询（每个连接使用不同节点）
+
+# 示例：为香港额外创建负载均衡组
+香港 = consistent-hashing
