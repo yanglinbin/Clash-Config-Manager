@@ -224,12 +224,6 @@ class ClashConfigGenerator:
             "merged_regions", "default_type", fallback="fallback"
         )
 
-        # 获取需要额外创建 load-balance 组的地区
-        load_balance_regions = {}
-        if self.config.has_section("load_balance_regions"):
-            for region, strategy in self.config["load_balance_regions"].items():
-                load_balance_regions[region] = strategy
-
         for region_name, region_config in regions.items():
             emoji = region_config["emoji"]
             keywords = region_config["keywords"]
@@ -270,24 +264,6 @@ class ClashConfigGenerator:
 
             merged_groups.append(group_config)
             logger.info(f"创建合并地区组: {group_name} (类型: {group_type})")
-
-            # 如果该地区需要额外创建 load-balance 组
-            if region_name in load_balance_regions:
-                strategy = load_balance_regions[region_name]
-                lb_group_name = f"{emoji}{region_name}_负载均衡"
-
-                lb_group_config = {
-                    "name": lb_group_name,
-                    "type": "load-balance",
-                    "use": list(providers.keys()),
-                    "filter": filter_regex,
-                    "url": test_url,
-                    "strategy": strategy,
-                    "interval": 600,
-                }
-
-                merged_groups.append(lb_group_config)
-                logger.info(f"创建负载均衡组: {lb_group_name} (策略: {strategy})")
 
         logger.info(f"生成了 {len(merged_groups)} 个合并地区组")
         return merged_groups
@@ -413,19 +389,10 @@ class ClashConfigGenerator:
             # 使用合并的地区组
             auto_group_names = []
 
-            # 获取需要额外创建 load-balance 组的地区
-            load_balance_regions = set()
-            if self.config.has_section("load_balance_regions"):
-                load_balance_regions = set(self.config["load_balance_regions"].keys())
-
             for region_name, region_config in regions.items():
                 emoji = region_config["emoji"]
                 # 添加合并的地区组
                 auto_group_names.append(f"{emoji}{region_name}")
-
-                # 如果有 load-balance 组，也添加进去
-                if region_name in load_balance_regions:
-                    auto_group_names.append(f"{emoji}{region_name}_负载均衡")
         else:
             # 使用原有的按提供者分组方式
             auto_group_names = []

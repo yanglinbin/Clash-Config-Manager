@@ -75,17 +75,6 @@ default_type = fallback
 美国 = fallback
 新加坡 = fallback
 
-[load_balance_regions]
-# 需要额外创建 load-balance 组的地区
-# 这些地区会额外生成一个负载均衡组，用于大文件下载等场景
-# 格式: 地区名称 = 策略
-# 策略:
-#   consistent-hashing  - 一致性哈希（推荐：相同域名使用同一节点）
-#   round-robin         - 轮询（每个连接使用不同节点）
-
-# 示例：为香港额外创建负载均衡组
-香港 = consistent-hashing
-
 [custom_groups]
 # 自定义节点组配置
 # 可以为特定用途创建专用节点组，自由指定使用的提供者和地区
@@ -109,5 +98,8 @@ AI专用 = 🤖, fallback, XXAI|NAIYUN, 香港|日本|美国
 # 示例 2: 游戏专用节点（低延迟优先）
 # 游戏专用 = 🎮, url-test, XXAI, 香港|日本
 
-# 示例 3: 下载专用节点（速度优先，使用所有提供者的香港和美国节点）
+# 示例 3: 香港负载均衡组（速度优先，使用所有提供者，一致性哈希策略）
+# 香港负载均衡 = 🇭🇰, load-balance, , 香港
+
+# 示例 4: 下载专用节点（使用所有提供者的香港和美国节点）
 # 下载专用 = ⬇️, load-balance, , 香港|美国
