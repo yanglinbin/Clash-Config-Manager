@@ -45,10 +45,10 @@ COPY --chown=appuser:appuser main.py .
 COPY --chown=appuser:appuser src/ ./src/
 COPY --chown=appuser:appuser config/rules.yaml ./config/rules.yaml
 COPY --chown=appuser:appuser config/rules.schema.json ./config/rules.schema.json
-COPY --chown=appuser:appuser config/config.ini.example ./config/config.ini.example
+# 注意：config.ini 由用户通过 docker-compose.yml 卷挂载提供
 
 # 创建必要的目录并设置权限
-RUN mkdir -p logs output backups && \
+RUN mkdir -p logs output backups config && \
     chown -R appuser:appuser ${APP_HOME}
 
 # 切换到非root用户
