@@ -292,6 +292,112 @@ class ClashConfigGenerator:
         logger.info(f"生成了 {len(merged_groups)} 个合并地区组")
         return merged_groups
 
+    def generate_custom_groups(
+        self, providers: Dict[str, str], regions: Dict[str, Dict[str, any]]
+    ) -> List[Dict[str, Any]]:
+        """生成自定义节点组"""
+        custom_groups = []
+
+        if not self.config.has_section("custom_groups"):
+            return custom_groups
+
+        test_url = self.config.get(
+            "clash",
+            "test_url",
+            fallback="http://connectivitycheck.gstatic.com/generate_204",
+        )
+
+        # 获取排除关键词
+        exclude_keywords = self.get_exclude_keywords()
+
+        # 遍历所有自定义组配置
+        for group_name, config_str in self.config["custom_groups"].items():
+            try:
+                # 解析配置: emoji, 类型, 提供者列表, 地区列表
+                parts = [p.strip() for p in config_str.split(",")]
+                if len(parts) < 4:
+                    logger.warning(f"自定义组 {group_name} 配置不完整，跳过")
+                    continue
+
+                emoji = parts[0]
+                group_type = parts[1]
+                providers_str = parts[2]
+                regions_str = parts[3]
+
+                # 解析提供者列表
+                if providers_str:
+                    selected_providers = [p.strip() for p in providers_str.split("|")]
+                    # 过滤掉不存在的提供者
+                    selected_providers = [
+                        p for p in selected_providers if p in providers
+                    ]
+                else:
+                    # 如果为空，使用所有提供者
+                    selected_providers = list(providers.keys())
+
+                if not selected_providers:
+                    logger.warning(f"自定义组 {group_name} 没有有效的提供者，跳过")
+                    continue
+
+                # 解析地区列表并生成过滤正则
+                if regions_str:
+                    selected_regions = [r.strip() for r in regions_str.split("|")]
+                    # 收集所有选中地区的关键词
+                    all_keywords = []
+                    for region_name in selected_regions:
+                        if region_name in regions:
+                            all_keywords.extend(regions[region_name]["keywords"])
+
+                    if not all_keywords:
+                        logger.warning(f"自定义组 {group_name} 没有有效的地区关键词，跳过")
+                        continue
+
+                    # 生成过滤正则
+                    filter_regex = "|".join(all_keywords)
+                    if exclude_keywords:
+                        exclude_pattern = "|".join(exclude_keywords)
+                        filter_regex = f"(?!.*({exclude_pattern})).*({filter_regex})"
+                else:
+                    logger.warning(f"自定义组 {group_name} 没有指定地区，跳过")
+                    continue
+
+                # 创建自定义组配置
+                full_group_name = f"{emoji}{group_name}"
+                group_config = {
+                    "name": full_group_name,
+                    "type": group_type,
+                    "use": selected_providers,
+                    "filter": filter_regex,
+                    "url": test_url,
+                }
+
+                # 根据类型添加特定参数
+                if group_type == "fallback":
+                    group_config["timeout"] = 5000
+                    group_config["interval"] = 600
+                elif group_type == "url-test":
+                    group_config["tolerance"] = 500
+                    group_config["interval"] = 600
+                elif group_type == "load-balance":
+                    group_config["strategy"] = "consistent-hashing"
+                    group_config["interval"] = 600
+
+                custom_groups.append(group_config)
+                logger.info(
+                    f"创建自定义节点组: {full_group_name} "
+                    f"(类型: {group_type}, 提供者: {','.join(selected_providers)}, "
+                    f"地区: {regions_str})"
+                )
+
+            except Exception as e:
+                logger.error(f"解析自定义组 {group_name} 配置失败: {e}")
+                continue
+
+        if custom_groups:
+            logger.info(f"生成了 {len(custom_groups)} 个自定义节点组")
+
+        return custom_groups
+
     def generate_main_proxy_groups(
         self, providers: Dict[str, str], regions: Dict[str, Dict[str, any]]
     ) -> List[Dict[str, Any]]:
@@ -415,14 +521,18 @@ class ClashConfigGenerator:
 
         if use_merged_groups:
             # 使用合并的地区组
-            return self.generate_main_proxy_groups(
-                providers, regions
-            ) + self.generate_merged_region_groups(providers, regions)
+            return (
+                self.generate_main_proxy_groups(providers, regions)
+                + self.generate_merged_region_groups(providers, regions)
+                + self.generate_custom_groups(providers, regions)
+            )
         else:
             # 使用原有的按提供者分组方式
-            return self.generate_main_proxy_groups(
-                providers, regions
-            ) + self.generate_auto_groups(providers, regions)
+            return (
+                self.generate_main_proxy_groups(providers, regions)
+                + self.generate_auto_groups(providers, regions)
+                + self.generate_custom_groups(providers, regions)
+            )
 
     def generate_config(self) -> Dict[str, Any]:
         """生成完整的 Clash 配置"""
