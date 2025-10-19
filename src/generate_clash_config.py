@@ -287,9 +287,7 @@ class ClashConfigGenerator:
                 }
 
                 merged_groups.append(lb_group_config)
-                logger.info(
-                    f"创建负载均衡组: {lb_group_name} (策略: {strategy})"
-                )
+                logger.info(f"创建负载均衡组: {lb_group_name} (策略: {strategy})")
 
         logger.info(f"生成了 {len(merged_groups)} 个合并地区组")
         return merged_groups
@@ -308,17 +306,17 @@ class ClashConfigGenerator:
         if use_merged_groups:
             # 使用合并的地区组
             auto_group_names = []
-            
+
             # 获取需要额外创建 load-balance 组的地区
             load_balance_regions = set()
             if self.config.has_section("load_balance_regions"):
                 load_balance_regions = set(self.config["load_balance_regions"].keys())
-            
+
             for region_name, region_config in regions.items():
                 emoji = region_config["emoji"]
                 # 添加合并的地区组
                 auto_group_names.append(f"{emoji}{region_name}")
-                
+
                 # 如果有 load-balance 组，也添加进去
                 if region_name in load_balance_regions:
                     auto_group_names.append(f"{emoji}{region_name}_负载均衡")
@@ -331,7 +329,9 @@ class ClashConfigGenerator:
 
             for provider_name in provider_names:
                 # 获取该提供者支持的地区列表
-                if not generate_all_groups and self.config.has_section("provider_regions"):
+                if not generate_all_groups and self.config.has_section(
+                    "provider_regions"
+                ):
                     supported_regions_str = self.config.get(
                         "provider_regions", provider_name, fallback=""
                     )
@@ -347,7 +347,9 @@ class ClashConfigGenerator:
                 for region_name, region_config in regions.items():
                     if region_name in supported_regions:
                         emoji = region_config["emoji"]
-                        auto_group_names.append(f"{emoji}{region_name}自动_{provider_name}")
+                        auto_group_names.append(
+                            f"{emoji}{region_name}自动_{provider_name}"
+                        )
 
         # 从配置文件获取代理组配置
         proxy_groups_config = self.rules_config.get("proxy_groups", {})
@@ -413,16 +415,14 @@ class ClashConfigGenerator:
 
         if use_merged_groups:
             # 使用合并的地区组
-            return (
-                self.generate_main_proxy_groups(providers, regions)
-                + self.generate_merged_region_groups(providers, regions)
-            )
+            return self.generate_main_proxy_groups(
+                providers, regions
+            ) + self.generate_merged_region_groups(providers, regions)
         else:
             # 使用原有的按提供者分组方式
-            return (
-                self.generate_main_proxy_groups(providers, regions)
-                + self.generate_auto_groups(providers, regions)
-            )
+            return self.generate_main_proxy_groups(
+                providers, regions
+            ) + self.generate_auto_groups(providers, regions)
 
     def generate_config(self) -> Dict[str, Any]:
         """生成完整的 Clash 配置"""
