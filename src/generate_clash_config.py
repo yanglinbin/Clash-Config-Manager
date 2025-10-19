@@ -244,12 +244,13 @@ class ClashConfigGenerator:
 
             group_name = f"{emoji}{region_name}"
 
-            # 创建合并的代理组配置（不使用 use 参数，让 filter 从所有节点中筛选）
+            # 创建合并的代理组配置（使用所有提供者，通过 filter 筛选节点）
             group_config = {
                 "name": group_name,
                 "type": group_type,
                 "filter": filter_regex,
                 "url": test_url,
+                "use": list(providers.keys()),  # 使用所有代理提供者
             }
 
             # 根据类型添加特定参数
@@ -355,9 +356,11 @@ class ClashConfigGenerator:
                     "url": test_url,
                 }
 
-                # 只有明确指定了提供者时才添加 use 参数
+                # 添加 use 参数：如果指定了提供者则使用指定的，否则使用所有提供者
                 if has_specific_providers:
                     group_config["use"] = selected_providers
+                else:
+                    group_config["use"] = list(providers.keys())
 
                 # 保存目标代理组信息（用于后续添加到主代理组）
                 group_config["_target_groups"] = target_groups
@@ -415,10 +418,11 @@ class ClashConfigGenerator:
 
         full_group_name = f"{emoji}{name}"
 
-        # 手动选择组不需要 filter，包含所有节点
+        # 手动选择组使用所有代理提供者，不使用 filter，包含所有节点
         group_config = {
             "name": full_group_name,
             "type": "select",
+            "use": list(providers.keys()),  # 使用所有代理提供者
         }
 
         logger.info(f"创建手动选择组: {full_group_name}")
