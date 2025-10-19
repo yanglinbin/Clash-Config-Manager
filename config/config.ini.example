@@ -24,9 +24,6 @@ exclude_keywords = 网址,剩余,流量,重置,套餐,如遇,永久,官方,群�
 # 更新间隔（秒）
 update_interval = 3600
 
-# GitHub Webhook 密钥（请修改为强密码）
-webhook_secret = your_webhook_secret_here_change_this
-
 [files]
 # 配置文件路径
 rules_config = config/rules.yaml

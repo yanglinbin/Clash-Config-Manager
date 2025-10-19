@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  # Clash 配置管理器应用
+  clash-config-manager:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: clash-config-manager
+    image: clash-config-manager:latest
+    restart: unless-stopped
+    
+    # 端口映射（只监听本地，通过Nginx反向代理访问）
+    ports:
+      - "127.0.0.1:8080:8080"
+    
+    # 卷挂载
+    volumes:
+      # 配置文件（必需）
+      - ./config/config.ini:/app/config/config.ini:ro
+      # 规则配置（可选，如需自定义）
+      - ./config/rules.yaml:/app/config/rules.yaml:ro
+      # 输出目录（生成的配置文件）
+      - ./output:/app/output
+      # 日志目录
+      - ./logs:/app/logs
+      # 备份目录（可选）
+      - ./backups:/app/backups
+    
+    # 环境变量
+    environment:
+      # 时区设置
+      - TZ=${TZ:-Asia/Shanghai}
+      # 应用端口
+      - APP_PORT=${APP_PORT:-8080}
+      # 日志级别
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      # 更新间隔（秒）
+      - UPDATE_INTERVAL=${UPDATE_INTERVAL:-3600}
+      # Webhook密钥（从配置文件读取，这里仅作为备用）
+      - WEBHOOK_SECRET=${WEBHOOK_SECRET:-}
+    
+    # 健康检查
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    # 资源限制（可选）
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '0.5'
+    #       memory: 256M
+    #     reservations:
+    #       cpus: '0.25'
+    #       memory: 128M
+    
+    # 网络配置（使用默认bridge网络）
+    networks:
+      - default
+    
+    # 日志配置
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+# 使用默认网络
+networks:
+  default:
+    driver: bridge

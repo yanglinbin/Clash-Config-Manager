@@ -1,0 +1,65 @@
+# Git 相关
+.git
+.gitignore
+.gitattributes
+
+# 文档
+README.md
+docs/
+*.md
+
+# Python 相关
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# 虚拟环境
+venv/
+env/
+ENV/
+.venv
+
+# IDE 相关
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 日志文件
+logs/
+*.log
+
+# 输出文件（运行时生成）
+output/
+
+# 备份文件
+backups/
+*.bak
+
+# 临时文件
+*.tmp
+*.temp
+*.cache
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 环境变量（应通过 docker-compose 或命令行传入）
+.env
+.env.local
+
+# 配置文件示例（不需要复制到镜像）
+config/*.example
+
+# 测试相关
+tests/
+test_*.py
+*_test.py
+.pytest_cache/
+.coverage
+htmlcov/
+

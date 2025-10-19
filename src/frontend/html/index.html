@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clash Config Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Clash Config Manager</h1>
+        
+        <div class="status info">
+            <h3>📊 服务状态</h3>
+            <p>✅ 服务正在运行</p>
+            <p>📅 当前时间: {{ current_time }}</p>
+            {% if last_update %}
+            <p>🔄 最后更新: {{ last_update }}</p>
+            {% endif %}
+        </div>
+        
+        <div class="status">
+            <h3>📁 配置信息</h3>
+            <p>配置文件: {{ config_exists }}</p>
+        </div>
+        
+        <div class="status api-list">
+            <h3>🔌 API 接口</h3>
+            <ul>
+                <li><code>GET /status</code> - 获取服务状态（JSON格式）</li>
+                <li><code>POST /manual-update</code> - 手动触发配置更新</li>
+                <li><code>GET /clash_profile.yaml</code> - 获取生成的配置文件</li>
+            </ul>
+        </div>
+        
+        <div class="status">
+            <h3>🎮 手动操作</h3>
+            <button onclick="manualUpdate()">🔄 手动更新配置</button>
+            <button onclick="checkStatus()">📊 检查状态</button>
+        </div>
+        
+        <div id="result"></div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
+

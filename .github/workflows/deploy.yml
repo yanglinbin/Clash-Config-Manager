@@ -1,0 +1,94 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - 'config/**'
+      - 'Dockerfile'
+      - 'docker-compose.yml'
+      - 'requirements.txt'
+      - '.github/workflows/deploy.yml'
+  
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  deploy:
+    name: Deploy to Production Server
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+      
+      - name: 部署到服务器
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT || 22 }}
+          script: |
+            echo "========================================="
+            echo "开始部署 Clash Config Manager"
+            echo "时间: $(date '+%Y-%m-%d %H:%M:%S')"
+            echo "========================================="
+            
+            # 进入项目目录
+            cd /opt/docker-apps/clash-config-manager || exit 1
+            
+            # 拉取最新代码
+            echo "正在拉取最新代码..."
+            git fetch origin
+            git reset --hard origin/main
+            
+            # 重新构建并部署
+            echo "正在重新构建镜像..."
+            docker compose build --no-cache
+            
+            echo "正在重启容器..."
+            docker compose down
+            docker compose up -d
+            
+            # 等待容器启动
+            echo "等待容器启动..."
+            sleep 10
+            
+            # 检查容器状态
+            if docker ps | grep -q "clash-config-manager"; then
+              echo "✅ 容器运行正常"
+              
+              # 测试健康检查
+              if curl -f http://localhost:8080/status; then
+                echo "✅ 健康检查通过"
+              else
+                echo "⚠️ 健康检查失败"
+                docker logs clash-config-manager --tail=50
+                exit 1
+              fi
+            else
+              echo "❌ 容器启动失败"
+              docker logs clash-config-manager --tail=50
+              exit 1
+            fi
+            
+            echo "========================================="
+            echo "✅ 部署完成"
+            echo "========================================="
+      
+      - name: 发送通知（部署成功）
+        if: success()
+        run: |
+          echo "部署成功！"
+          echo "提交: ${{ github.sha }}"
+          echo "分支: ${{ github.ref }}"
+          echo "提交者: ${{ github.actor }}"
+      
+      - name: 发送通知（部署失败）
+        if: failure()
+        run: |
+          echo "部署失败！请检查日志"
+          exit 1
+

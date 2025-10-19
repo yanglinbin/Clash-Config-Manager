@@ -1,21 +1,25 @@
+# ===== 敏感信息 =====
 # 环境变量文件（包含敏感信息）
 .env
+.env.local
+.env.*.local
 
 # 配置文件（包含代理订阅链接等敏感信息）
 config/config.ini
 
+# ===== 生成的文件 =====
 # 生成的配置文件
-output/clash_profile.yaml
-output/*.yaml
+output/
+*.yaml.bak
 
-# 服务器部署相关
-nginx-config-example.conf
+# 备份文件
 backups/
 
-# 日志文件
-logs/*.log
+# ===== 日志文件 =====
+logs/
+*.log
 
-# Python 相关
+# ===== Python 相关 =====
 __pycache__/
 *.py[cod]
 *$py.class
@@ -33,24 +37,45 @@ parts/
 sdist/
 var/
 wheels/
+pip-wheel-metadata/
+share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
 
-# IDE 相关
+# 虚拟环境
+venv/
+env/
+ENV/
+.venv
+
+# ===== IDE 相关 =====
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
+.project
+.pydevproject
+.settings/
 
-# 系统文件
+# ===== 系统文件 =====
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+desktop.ini
 
-# 日志文件
-*.log
+# ===== Docker 相关 =====
+# Docker volumes
+docker-volumes/
+.docker/
 
-# 临时文件
+# ===== 临时文件 =====
 *.tmp
 *.temp
+*.cache

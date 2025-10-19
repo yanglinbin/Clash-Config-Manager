@@ -176,12 +176,12 @@ proxy_groups:
 custom_rules:
   #🚀海外代理
   - DOMAIN-SUFFIX,geeks3d.com,🚀海外代理
+
   #🌐全球直连
   - DOMAIN-SUFFIX,cn.download.nvidia.com,🌐全球直连
   - DOMAIN-SUFFIX,downloadmirror.intel.com,🌐全球直连
 
   # Microsoft Bing 规则
-
   - DOMAIN-SUFFIX,bing.com, 🌐全球直连
   - DOMAIN-SUFFIX,bing.net, 🌐全球直连
 
@@ -240,7 +240,6 @@ custom_rules:
   - IP-CIDR,208.78.164.0/22,🌐全球直连
 
   # 游戏平台规则
-
   # Epic Games
   - DOMAIN-SUFFIX,epicgames.com, 🎮游戏平台
   - DOMAIN-SUFFIX,epicgames.dev, 🎮游戏平台
@@ -303,7 +302,6 @@ custom_rules:
   - DOMAIN-SUFFIX,xxality.cn, 🎮游戏平台
 
   # 海外视频规则
-
   - DOMAIN-SUFFIX,formula1.com, 🎬海外视频
   - DOMAIN-SUFFIX,livetiming-proxy.multiviewer.dev,🎬海外视频
   - DOMAIN-SUFFIX,api.multiviewer.dev,🎬海外视频
@@ -314,7 +312,6 @@ custom_rules:
   - PROCESS-NAME,cursor, 🤖AI平台
 
   # jetbrains ai
-
   - DOMAIN-SUFFIX,jetbrains.ai, 🤖AI平台
 
   # AI 平台规则
@@ -338,12 +335,11 @@ custom_rules:
   - DOMAIN-SUFFIX,openaiapi-site.azureedge.net, 🤖AI平台
   - DOMAIN-SUFFIX,sentry.io, 🤖AI平台
   - DOMAIN-SUFFIX,stripe.com, 🤖AI平台
-    # Copilot 规则
 
+    # Copilot 规则
   - DOMAIN-SUFFIX,copilot.microsoft.com, 🤖AI平台
 
   # Netflix 规则
-
   - DOMAIN-KEYWORD,apiproxy-device-prod-nlb-, 🎬Netflix
   - DOMAIN-KEYWORD,dualstack.apiproxy-, 🎬Netflix
   - DOMAIN-KEYWORD,netflixdnstest, 🎬Netflix
@@ -386,7 +382,6 @@ custom_rules:
   - IP-CIDR,208.75.76.0/22, 🎬Netflix,no-resolve
 
   # 哔哩哔哩规则
-
   - DOMAIN,p-bstarstatic.akamaized.net, 🎬哔哩哔哩
   - DOMAIN,p.bstarstatic.com, 🎬哔哩哔哩
   - DOMAIN,upos-bstar-mirrorakam.akamaized.net, 🎬哔哩哔哩
@@ -430,7 +425,6 @@ custom_rules:
   - DOMAIN-SUFFIX,smtcdns.net, 🎬哔哩哔哩
 
   # 微软服务规则
-
   - DOMAIN-KEYWORD,1drv, ☁️微软服务
   - DOMAIN-KEYWORD,microsoft, ☁️微软服务
   - DOMAIN-SUFFIX,aadrm.com, ☁️微软服务
@@ -510,7 +504,6 @@ custom_rules:
   - DOMAIN-SUFFIX,yammerusercontent.com, ☁️微软服务
 
   # OneDrive 规则
-
   - PROCESS-NAME,OneDrive, ☁️OneDrive
   - PROCESS-NAME,OneDriveUpdater, ☁️OneDrive
   - DOMAIN-KEYWORD,1drv, ☁️OneDrive
