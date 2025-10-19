@@ -12,7 +12,7 @@ import configparser
 import logging
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 
 # 配置日志
 logging.basicConfig(
@@ -29,7 +29,9 @@ logger = logging.getLogger(__name__)
 class ClashConfigGenerator:
     def __init__(self, config_file="config/config.ini"):
         self.config_file = config_file
-        self.config = configparser.ConfigParser()
+        # 创建 ConfigParser 并保留键名的大小写
+        self.config = configparser.RawConfigParser()
+        self.config.optionxform = str  # 保留键名原始大小写
         self.rules_config = {}
         self.load_config()
 
@@ -242,11 +244,10 @@ class ClashConfigGenerator:
 
             group_name = f"{emoji}{region_name}"
 
-            # 创建合并的代理组配置
+            # 创建合并的代理组配置（不使用 use 参数，让 filter 从所有节点中筛选）
             group_config = {
                 "name": group_name,
                 "type": group_type,
-                "use": list(providers.keys()),  # 使用所有提供者
                 "filter": filter_regex,
                 "url": test_url,
             }
@@ -289,7 +290,7 @@ class ClashConfigGenerator:
         # 遍历所有自定义组配置
         for group_name, config_str in self.config["custom_groups"].items():
             try:
-                # 解析配置: emoji, 类型, 提供者列表, 地区列表
+                # 解析配置: emoji, 类型, 提供者列表, 地区列表, 目标代理组列表
                 parts = [p.strip() for p in config_str.split(",")]
                 if len(parts) < 4:
                     logger.warning(f"自定义组 {group_name} 配置不完整，跳过")
@@ -299,21 +300,27 @@ class ClashConfigGenerator:
                 group_type = parts[1]
                 providers_str = parts[2]
                 regions_str = parts[3]
+                target_groups_str = parts[4] if len(parts) > 4 else ""
 
                 # 解析提供者列表
+                has_specific_providers = bool(providers_str)
                 if providers_str:
                     selected_providers = [p.strip() for p in providers_str.split("|")]
                     # 过滤掉不存在的提供者
                     selected_providers = [
                         p for p in selected_providers if p in providers
                     ]
+                    if not selected_providers:
+                        logger.warning(f"自定义组 {group_name} 没有有效的提供者，跳过")
+                        continue
                 else:
-                    # 如果为空，使用所有提供者
-                    selected_providers = list(providers.keys())
+                    selected_providers = []
 
-                if not selected_providers:
-                    logger.warning(f"自定义组 {group_name} 没有有效的提供者，跳过")
-                    continue
+                # 解析目标代理组列表
+                if target_groups_str:
+                    target_groups = [g.strip() for g in target_groups_str.split("|")]
+                else:
+                    target_groups = []  # 空表示添加到所有主代理组
 
                 # 解析地区列表并生成过滤正则
                 if regions_str:
@@ -325,7 +332,9 @@ class ClashConfigGenerator:
                             all_keywords.extend(regions[region_name]["keywords"])
 
                     if not all_keywords:
-                        logger.warning(f"自定义组 {group_name} 没有有效的地区关键词，跳过")
+                        logger.warning(
+                            f"自定义组 {group_name} 没有有效的地区关键词，跳过"
+                        )
                         continue
 
                     # 生成过滤正则
@@ -342,10 +351,16 @@ class ClashConfigGenerator:
                 group_config = {
                     "name": full_group_name,
                     "type": group_type,
-                    "use": selected_providers,
                     "filter": filter_regex,
                     "url": test_url,
                 }
+
+                # 只有明确指定了提供者时才添加 use 参数
+                if has_specific_providers:
+                    group_config["use"] = selected_providers
+
+                # 保存目标代理组信息（用于后续添加到主代理组）
+                group_config["_target_groups"] = target_groups
 
                 # 根据类型添加特定参数
                 if group_type == "fallback":
@@ -359,10 +374,20 @@ class ClashConfigGenerator:
                     group_config["interval"] = 600
 
                 custom_groups.append(group_config)
+                provider_info = (
+                    f"提供者: {','.join(selected_providers)}"
+                    if has_specific_providers
+                    else "提供者: 所有"
+                )
+                target_info = (
+                    f"目标组: {','.join(target_groups)}"
+                    if target_groups
+                    else "目标组: 所有"
+                )
                 logger.info(
                     f"创建自定义节点组: {full_group_name} "
-                    f"(类型: {group_type}, 提供者: {','.join(selected_providers)}, "
-                    f"地区: {regions_str})"
+                    f"(类型: {group_type}, {provider_info}, "
+                    f"地区: {regions_str}, {target_info})"
                 )
 
             except Exception as e:
@@ -374,34 +399,60 @@ class ClashConfigGenerator:
 
         return custom_groups
 
+    def generate_manual_select_group(
+        self, providers: Dict[str, str]
+    ) -> Optional[Dict[str, Any]]:
+        """生成手动选择组"""
+        if not self.config.has_section("manual_select"):
+            return None
+
+        enabled = self.config.getboolean("manual_select", "enabled", fallback=False)
+        if not enabled:
+            return None
+
+        name = self.config.get("manual_select", "name", fallback="手动选择")
+        emoji = self.config.get("manual_select", "emoji", fallback="✋")
+
+        full_group_name = f"{emoji}{name}"
+
+        # 手动选择组不需要 filter，包含所有节点
+        group_config = {
+            "name": full_group_name,
+            "type": "select",
+        }
+
+        logger.info(f"创建手动选择组: {full_group_name}")
+        return group_config
+
     def generate_main_proxy_groups(
-        self, providers: Dict[str, str], regions: Dict[str, Dict[str, any]]
+        self,
+        providers: Dict[str, str],
+        regions: Dict[str, Dict[str, any]],
+        custom_groups: List[Dict[str, Any]] = None,
+        manual_select_group: Optional[Dict[str, Any]] = None,
     ) -> List[Dict[str, Any]]:
         """生成主要代理组"""
-        provider_names = list(providers.keys())
+        if custom_groups is None:
+            custom_groups = []
 
         # 检查是否使用合并的地区组
         use_merged_groups = self.config.getboolean(
             "clash", "use_merged_region_groups", fallback=False
         )
 
+        # 收集所有地区组名称
+        region_group_names = []
         if use_merged_groups:
-            # 使用合并的地区组
-            auto_group_names = []
-
             for region_name, region_config in regions.items():
                 emoji = region_config["emoji"]
-                # 添加合并的地区组
-                auto_group_names.append(f"{emoji}{region_name}")
+                region_group_names.append(f"{emoji}{region_name}")
         else:
             # 使用原有的按提供者分组方式
-            auto_group_names = []
             generate_all_groups = self.config.getboolean(
                 "clash", "generate_all_region_groups", fallback=False
             )
 
-            for provider_name in provider_names:
-                # 获取该提供者支持的地区列表
+            for provider_name in providers.keys():
                 if not generate_all_groups and self.config.has_section(
                     "provider_regions"
                 ):
@@ -420,9 +471,17 @@ class ClashConfigGenerator:
                 for region_name, region_config in regions.items():
                     if region_name in supported_regions:
                         emoji = region_config["emoji"]
-                        auto_group_names.append(
+                        region_group_names.append(
                             f"{emoji}{region_name}自动_{provider_name}"
                         )
+
+        # 获取代理组默认配置
+        proxy_defaults = {}
+        if self.config.has_section("proxy_group_defaults"):
+            for group_name, default_node in self.config["proxy_group_defaults"].items():
+                if default_node:
+                    proxy_defaults[group_name] = default_node
+                    logger.info(f"读取默认节点配置: {group_name} -> {default_node}")
 
         # 从配置文件获取代理组配置
         proxy_groups_config = self.rules_config.get("proxy_groups", {})
@@ -431,11 +490,43 @@ class ClashConfigGenerator:
         # 处理主要代理组
         main_groups_config = proxy_groups_config.get("main_groups", [])
         for group_config in main_groups_config:
+            group_name = group_config["name"]
+
+            # 构建 proxies 列表：默认节点（如果有） + DIRECT + 地区组 + 自定义组 + 手动选择组
+            proxies = []
+            default_node = proxy_defaults.get(group_name, None)
+
+            # 添加默认节点（如果配置了）
+            if default_node:
+                proxies.append(default_node)
+
+            # 添加 DIRECT
+            proxies.append("DIRECT")
+
+            # 添加地区组（排除已作为默认节点的）
+            for region_name in region_group_names:
+                if region_name != default_node:
+                    proxies.append(region_name)
+
+            # 添加自定义组（根据目标组过滤，排除已作为默认节点的）
+            for custom_group in custom_groups:
+                custom_group_name = custom_group["name"]
+                target_groups = custom_group.get("_target_groups", [])
+
+                # 如果目标组为空（表示添加到所有主代理组）或包含当前组
+                if (
+                    not target_groups or group_name in target_groups
+                ) and custom_group_name != default_node:
+                    proxies.append(custom_group_name)
+
+            # 添加手动选择组（如果启用，排除已作为默认节点的）
+            if manual_select_group and manual_select_group["name"] != default_node:
+                proxies.append(manual_select_group["name"])
+
             group = {
-                "name": group_config["name"],
+                "name": group_name,
                 "type": group_config["type"],
-                "use": provider_names,
-                "proxies": ["DIRECT"] + auto_group_names,
+                "proxies": proxies,
             }
             main_groups.append(group)
 
@@ -486,20 +577,37 @@ class ClashConfigGenerator:
             "clash", "use_merged_region_groups", fallback=False
         )
 
+        # 先生成自定义组和手动选择组
+        custom_groups = self.generate_custom_groups(providers, regions)
+        manual_select_group = self.generate_manual_select_group(providers)
+
+        # 生成主代理组时传入自定义组和手动选择组，以便添加到选项列表
+        main_groups = self.generate_main_proxy_groups(
+            providers, regions, custom_groups, manual_select_group
+        )
+
+        # 生成所有代理组
+        all_groups = main_groups
+
+        # 添加地区组
         if use_merged_groups:
-            # 使用合并的地区组
-            return (
-                self.generate_main_proxy_groups(providers, regions)
-                + self.generate_merged_region_groups(providers, regions)
-                + self.generate_custom_groups(providers, regions)
-            )
+            all_groups += self.generate_merged_region_groups(providers, regions)
         else:
-            # 使用原有的按提供者分组方式
-            return (
-                self.generate_main_proxy_groups(providers, regions)
-                + self.generate_auto_groups(providers, regions)
-                + self.generate_custom_groups(providers, regions)
-            )
+            all_groups += self.generate_auto_groups(providers, regions)
+
+        # 添加自定义组
+        for custom_group in custom_groups:
+            # 移除内部使用的 _target_groups 字段
+            group_copy = {
+                k: v for k, v in custom_group.items() if not k.startswith("_")
+            }
+            all_groups.append(group_copy)
+
+        # 添加手动选择组
+        if manual_select_group:
+            all_groups.append(manual_select_group)
+
+        return all_groups
 
     def generate_config(self) -> Dict[str, Any]:
         """生成完整的 Clash 配置"""
