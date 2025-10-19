@@ -109,13 +109,29 @@ proxy_groups:
       type: select
       description: "通用海外代理，适用于大部分海外网站"
 
-    - name: "✈️Telegram"
+    - name: "🎮游戏平台"
       type: select
-      description: "Telegram 专用代理设置"
+      description: "Steam、Epic、PlayStation 等游戏平台"
 
     - name: "🤖AI平台"
       type: select
       description: "针对 ChatGPT、Claude 等 AI 平台优化"
+
+    - name: "✈️Telegram"
+      type: select
+      description: "Telegram 专用代理设置"
+
+    - name: "🔍Google"
+      type: select
+      description: "Google 服务专用"
+
+    - name: "☁️OneDrive"
+      type: select
+      description: "OneDrive 云盘专用"
+
+    - name: "☁️微软服务"
+      type: select
+      description: "其他微软服务"
 
     - name: "🎬YouTube"
       type: select
@@ -133,22 +149,6 @@ proxy_groups:
       type: select
       description: "哔哩哔哩专用设置"
 
-    - name: "🔍Google"
-      type: select
-      description: "Google 服务专用"
-
-    - name: "🔍Microsoft_Bing"
-      type: select
-      description: "Bing 搜索专用"
-
-    - name: "☁️OneDrive"
-      type: select
-      description: "OneDrive 云盘专用"
-
-    - name: "☁️微软服务"
-      type: select
-      description: "其他微软服务"
-
     - name: "🍎Apple"
       type: select
       description: "Apple 服务专用"
@@ -156,10 +156,6 @@ proxy_groups:
     - name: "🍎iCloud"
       type: select
       description: "iCloud 专用"
-
-    - name: "🎮游戏平台"
-      type: select
-      description: "Steam、Epic、PlayStation 等游戏平台"
 
     - name: "🌐全球直连"
       type: select
@@ -183,6 +179,11 @@ custom_rules:
   #🌐全球直连
   - DOMAIN-SUFFIX,cn.download.nvidia.com,🌐全球直连
   - DOMAIN-SUFFIX,downloadmirror.intel.com,🌐全球直连
+
+  # Microsoft Bing 规则
+
+  - DOMAIN-SUFFIX,bing.com, 🌐全球直连
+  - DOMAIN-SUFFIX,bing.net, 🌐全球直连
 
   #🌐全球直连_steam下载
   - DOMAIN-SUFFIX,steamcontent.com,🌐全球直连
@@ -427,11 +428,6 @@ custom_rules:
   - DOMAIN-SUFFIX,hdslb.com, 🎬哔哩哔哩
   - DOMAIN-SUFFIX,im9.com, 🎬哔哩哔哩
   - DOMAIN-SUFFIX,smtcdns.net, 🎬哔哩哔哩
-
-  # Microsoft Bing 规则
-
-  - DOMAIN-SUFFIX,bing.com, 🔍Microsoft_Bing
-  - DOMAIN-SUFFIX,bing.net, 🔍Microsoft_Bing
 
   # 微软服务规则
 
