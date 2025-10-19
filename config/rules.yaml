@@ -137,10 +137,6 @@ proxy_groups:
       type: select
       description: "Google 服务专用"
 
-    - name: "🤖Copilot"
-      type: select
-      description: "Microsoft Copilot 专用"
-
     - name: "🔍Microsoft_Bing"
       type: select
       description: "Bing 搜索专用"
@@ -312,7 +308,6 @@ custom_rules:
   - DOMAIN-SUFFIX,api.multiviewer.dev,🎬海外视频
   - PROCESS-NAME,MultiViewer.exe,🎬海外视频
 
-  #  v3.license.shenwavideo.cn
   # cursor
   - DOMAIN-SUFFIX,cursor.sh, 🤖AI平台
   - PROCESS-NAME,cursor, 🤖AI平台
@@ -342,6 +337,9 @@ custom_rules:
   - DOMAIN-SUFFIX,openaiapi-site.azureedge.net, 🤖AI平台
   - DOMAIN-SUFFIX,sentry.io, 🤖AI平台
   - DOMAIN-SUFFIX,stripe.com, 🤖AI平台
+    # Copilot 规则
+
+  - DOMAIN-SUFFIX,copilot.microsoft.com, 🤖AI平台
 
   # Netflix 规则
 
@@ -429,10 +427,6 @@ custom_rules:
   - DOMAIN-SUFFIX,hdslb.com, 🎬哔哩哔哩
   - DOMAIN-SUFFIX,im9.com, 🎬哔哩哔哩
   - DOMAIN-SUFFIX,smtcdns.net, 🎬哔哩哔哩
-
-  # Copilot 规则
-
-  - DOMAIN-SUFFIX,copilot.microsoft.com, 🤖Copilot
 
   # Microsoft Bing 规则
 
