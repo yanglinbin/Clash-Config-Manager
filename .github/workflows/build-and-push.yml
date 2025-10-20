@@ -67,11 +67,11 @@ jobs:
             镜像已推送到 GitHub Container Registry，webhook 将自动触发更新。
 
       - name: Trigger server update via webhook
-        if: secrets.WEBHOOK_URL != ''
         run: |
           curl -X POST \
             -H "Authorization: Bearer ${{ secrets.WEBHOOK_SECRET }}" \
             -H "Content-Type: application/json" \
             -d '{"version":"${{ github.ref_name }}","image":"${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}"}' \
             ${{ secrets.WEBHOOK_URL }} || echo "Webhook call failed, but continuing..."
+        continue-on-error: true
 
