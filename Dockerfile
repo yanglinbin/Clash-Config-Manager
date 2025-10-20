@@ -37,8 +37,8 @@ RUN groupadd -r appuser && \
 # 设置工作目录
 WORKDIR ${APP_HOME}
 
-# 从构建阶段复制Python依赖
-COPY --from=builder /root/.local /home/appuser/.local
+# 从构建阶段复制Python依赖（设置正确的权限）
+COPY --from=builder --chown=appuser:appuser /root/.local /home/appuser/.local
 
 # 复制应用代码
 COPY --chown=appuser:appuser main.py .
@@ -54,8 +54,9 @@ RUN mkdir -p logs output backups config && \
 # 切换到非root用户
 USER appuser
 
-# 设置Python路径
-ENV PATH="/home/appuser/.local/bin:${PATH}"
+# 设置Python路径（包含用户安装的包）
+ENV PATH="/home/appuser/.local/bin:${PATH}" \
+    PYTHONPATH="/home/appuser/.local/lib/python3.9/site-packages:${PYTHONPATH}"
 
 # 暴露端口
 EXPOSE 8080
@@ -65,5 +66,6 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD curl -f http://localhost:8080/status || exit 1
 
 # 启动应用
-CMD ["python", "src/app.py"]
+# 使用 gunicorn 作为生产级 WSGI 服务器
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "2", "--threads", "4", "--timeout", "120", "--access-logfile", "logs/access.log", "--error-logfile", "logs/error.log", "src.app:app"]
 

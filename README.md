@@ -2,163 +2,153 @@
 
 自动化的 Clash 代理配置管理系统，支持多订阅源合并、自动更新、节点筛选和规则管理。
 
-## ✨ 功能特性
+## 功能特性
 
 - 🔄 **多订阅源合并** - 支持同时管理多个代理订阅源
 - 🌍 **智能节点分组** - 按地区自动分组（香港、台湾、日本、美国、新加坡等）
 - 🎯 **节点关键词过滤** - 自动过滤广告节点和无效节点
 - ⚙️ **自定义规则配置** - 灵活配置代理规则和分流规则
-- 🔄 **定时自动更新** - 支持定时更新订阅源
 - 🐳 **Docker 部署** - 容器化部署，简单可靠
-- 🚀 **GitHub Actions 自动部署** - 代码推送自动部署到服务器
+- 🌐 **Web 管理界面** - 提供状态查询和手动更新功能
+- 🚀 **CI/CD 自动化** - GitHub Actions 自动构建和部署
 
-## 🚀 快速开始
+---
 
-### 1. 准备配置
+## 快速开始
+
+### 本地开发（Windows）
 
 ```bash
-# 复制配置示例
+# 1. 克隆项目
+git clone https://github.com/YOUR_USERNAME/clash-config-manager.git
+cd clash-config-manager
+
+# 2. 配置订阅
 cp config/config.ini.example config/config.ini
+# 编辑 config.ini 填入你的订阅链接
 
-# 编辑配置，填入你的订阅链接
-nano config/config.ini
+# 3. 本地测试
+docker-compose up --build
+
+# 4. 访问
+http://localhost:8080/
 ```
 
-### 2. 启动服务
+### 生产部署（Ubuntu）
 
-```bash
-# 使用 Docker Compose 启动
-docker compose up -d
+详细部署步骤请查看：[DEPLOY.md](DEPLOY.md)
 
-# 查看服务状态
-docker compose ps
-```
+---
 
-### 3. 访问配置
-
-应用监听在 `127.0.0.1:8080`，需要通过 Nginx 反向代理访问：
-
-- **Clash 配置**: http://your-server/clash_profile.yaml
-- **服务状态**: http://your-server/status
-
-## 📁 项目结构
+## 项目结构
 
 ```
 clash-config-manager/
-├── .github/workflows/      # GitHub Actions 工作流
-│   └── deploy.yml         # 自动部署配置
-├── config/                 # 配置文件
-│   ├── config.ini          # 主配置（需自行创建）
-│   ├── config.ini.example  # 配置示例
-│   ├── rules.yaml          # 规则配置
-│   └── rules.schema.json   # 规则Schema
-├── src/                    # 源代码
-│   ├── generate_clash_config.py  # 配置生成器
-│   ├── app.py                     # Web 应用
-│   └── frontend/                  # 前端资源
-│       ├── html/                  # HTML 模板
-│       ├── css/                   # 样式表
-│       └── js/                    # JavaScript 脚本
-├── output/                 # 生成的配置（自动创建）
-├── logs/                   # 日志文件（自动创建）
-├── Dockerfile              # Docker镜像定义
-├── docker-compose.yml      # Docker编排配置
-├── main.py                 # 主入口（手动生成配置）
-└── DEPLOY.md               # 部署文档
+├── .github/workflows/          # GitHub Actions CI/CD
+│   ├── build-and-push.yml     # 构建镜像并推送到 ghcr.io
+│   └── sync-config.yml        # 同步配置文件到服务器
+├── config/                     # 配置文件
+│   ├── config.ini.example     # 配置示例
+│   ├── rules.yaml             # 规则配置
+│   └── rules.schema.json      # 规则模式
+├── src/                        # 源代码
+│   ├── app.py                 # Flask Web 应用
+│   ├── generate_clash_config.py
+│   └── frontend/              # 前端资源
+├── server-deploy/              # 服务器部署文件
+│   ├── hooks.json             # Webhook 配置
+│   ├── update-from-github.sh  # 自动更新脚本
+│   └── webhook.service        # systemd 服务
+├── docker-compose.yml          # Docker 编排
+├── Dockerfile                  # 镜像构建
+└── README.md                   # 本文件
 ```
 
-## ⚙️ 配置说明
+---
 
-### config.ini 主要配置
+## API 端点
+
+- `GET /` - Web 管理界面
+- `GET /status` - 服务状态（JSON）
+- `POST /update` - 手动触发更新
+- `GET /clash_profile.yaml` - 下载生成的配置文件
+
+---
+
+## 配置说明
+
+### config.ini
 
 ```ini
-[proxy_providers]
-# 订阅源配置
-YOUR_PROVIDER = https://your-subscription-url
+[subscription]
+urls = 
+    https://your-subscription-url-1
+    https://your-subscription-url-2
 
-[regions]
-# 地区分组配置
-香港 = 🇭🇰,Hong Kong,HK,香港
-台湾 = 🇹🇼,Taiwan,TW,台湾
-日本 = 🇯🇵,Japan,JP,日本
-美国 = 🇺🇸,United States,US,美国
-新加坡 = 🇸🇬,Singapore,SG,新加坡
-
-[filter]
-# 节点过滤规则
-exclude_keywords = 网址,剩余,流量,过期
-
-[server]
-# 更新间隔（秒）
-update_interval = 3600
+[proxy_group_defaults]
+🚀节点选择 = 🇭🇰香港
+🇭🇰香港 = DIRECT
+🇨🇳台湾 = DIRECT
+🇯🇵日本 = DIRECT
+🇺🇸美国 = DIRECT
+🇸🇬新加坡 = DIRECT
 ```
 
-详细配置请参考 `config/config.ini.example`
+详细配置说明请参考 `config/config.ini.example`。
 
-## 🐳 Docker 说明
+---
 
-### docker-compose.yml
+## 自动化部署
 
-定义应用容器配置：
-- 容器名: `clash-config-manager`
-- 端口: `127.0.0.1:8080`（只监听本地，需通过Nginx访问）
-- 自动重启: 是
-- 健康检查: 是
-
-### 部署架构
-
-```
-客户端请求
-   ↓
-Nginx容器 (80/443) ← 手动部署
-   ↓ 反向代理
-应用容器 (8080)    ← docker-compose部署
-   ↓
-返回响应
-```
-
-**说明**：
-- 应用容器由本项目管理（docker-compose）
-- Nginx容器需要手动部署和配置
-- 两个容器独立运行，通过网络通信
-
-## 🔧 常用命令
+### 代码更新
 
 ```bash
-# 启动服务
-docker compose up -d
-
-# 查看日志
-docker compose logs -f
-
-# 重启服务
-docker compose restart
-
-# 停止服务
-docker compose down
-
-# 查看容器状态
-docker compose ps
-
-# 手动生成配置
-docker compose exec clash-config-manager python main.py
+git tag v1.0.0
+git push --tags
+# GitHub Actions 自动构建并部署到服务器
 ```
 
-## 📝 部署说明
+### 配置更新
 
-详细的Linux服务器部署步骤（包括Docker安装、数据目录配置、Nginx部署）请查看：
+```bash
+vim config/rules.yaml
+git commit -am "chore: 更新规则"
+git push
+# GitHub Actions 自动同步到服务器并重启
+```
 
-**[DEPLOY.md](DEPLOY.md)** - 完整部署指南
+---
 
-## 🔒 安全提示
+## 开发
 
-⚠️ **重要**：不要将以下文件提交到 Git：
-- `config/config.ini` - 包含订阅链接
-- `output/clash_profile.yaml` - 包含节点信息
-- `.env` - 环境变量
+### 技术栈
 
-这些文件已在 `.gitignore` 中配置。
+- **后端**: Python 3.9 + Flask + Gunicorn
+- **容器**: Docker + Docker Compose
+- **CI/CD**: GitHub Actions + GitHub Container Registry
+- **自动化**: Webhook + SSH
 
-## 📄 License
+### 本地开发
 
-MIT
+```bash
+# 安装依赖
+pip install -r requirements.txt
+
+# 运行开发服务器
+python src/app.py
+
+# 或使用 Docker
+docker-compose up --build
+```
+
+---
+
+## License
+
+MIT License
+
+---
+
+## 相关文档
+
+- [部署指南](DEPLOY.md) - 详细的服务器部署步骤

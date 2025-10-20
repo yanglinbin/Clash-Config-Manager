@@ -14,12 +14,18 @@ from datetime import datetime
 from flask import Flask, request, jsonify, render_template
 from pathlib import Path
 
+# 获取项目根目录（app.py 在 src/ 下，需要向上一级）
+PROJECT_ROOT = Path(__file__).parent.parent
+
+# 确保日志目录存在
+(PROJECT_ROOT / "logs").mkdir(parents=True, exist_ok=True)
+
 # 配置日志
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler("logs/app.log", encoding="utf-8"),
+        logging.FileHandler(PROJECT_ROOT / "logs" / "app.log", encoding="utf-8"),
         logging.StreamHandler(),
     ],
 )
@@ -40,14 +46,14 @@ app = Flask(
 
 class ConfigManager:
     def __init__(self, config_file="config/config.ini"):
-        self.config_file = config_file
+        self.config_file = PROJECT_ROOT / config_file
         self.config = configparser.ConfigParser()
         self.load_config()
         self.last_update = None
 
     def load_config(self):
         """加载配置文件"""
-        if Path(self.config_file).exists():
+        if self.config_file.exists():
             self.config.read(self.config_file, encoding="utf-8")
             logger.info(f"已加载配置文件: {self.config_file}")
         else:
@@ -57,10 +63,14 @@ class ConfigManager:
         """重新生成配置文件"""
         try:
             result = subprocess.run(
-                [sys.executable, "src/generate_clash_config.py"],
+                [
+                    sys.executable,
+                    str(PROJECT_ROOT / "src" / "generate_clash_config.py"),
+                ],
                 capture_output=True,
                 text=True,
                 timeout=60,
+                cwd=str(PROJECT_ROOT),
             )
 
             if result.returncode == 0:
@@ -94,11 +104,11 @@ def status():
             if config_manager.last_update
             else None
         ),
-        "config_file": config_manager.config_file,
+        "config_file": str(config_manager.config_file),
     }
 
     # 检查配置文件是否存在
-    config_file_path = Path("output/clash_profile.yaml")
+    config_file_path = PROJECT_ROOT / "output" / "clash_profile.yaml"
     config_exists = config_file_path.exists()
     if config_exists:
         config_stat = config_file_path.stat()
@@ -145,6 +155,23 @@ def manual_update():
         return jsonify({"error": "Internal server error"}), 500
 
 
+@app.route("/clash_profile.yaml")
+def get_clash_config():
+    """获取生成的Clash配置文件"""
+    config_path = PROJECT_ROOT / "output" / "clash_profile.yaml"
+    if config_path.exists():
+        from flask import send_file
+
+        return send_file(
+            str(config_path),
+            mimetype="text/yaml",
+            as_attachment=False,
+            download_name="clash_profile.yaml",
+        )
+    else:
+        return jsonify({"error": "配置文件不存在"}), 404
+
+
 @app.route("/")
 def index():
     """主页 - Web 管理界面"""
@@ -157,7 +184,9 @@ def index():
             else "从未更新"
         ),
         config_exists=(
-            "✅ 存在" if Path("output/clash_profile.yaml").exists() else "❌ 不存在"
+            "✅ 存在"
+            if (PROJECT_ROOT / "output" / "clash_profile.yaml").exists()
+            else "❌ 不存在"
         ),
     )
 

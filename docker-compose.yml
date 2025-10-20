@@ -1,14 +1,16 @@
-version: '3.8'
-
 services:
   # Clash 配置管理器应用
   clash-config-manager:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    # 使用 GitHub Container Registry 镜像（生产环境）
+    # 本地开发时可以使用: docker-compose up --build
+    image: ghcr.io/YOUR_GITHUB_USERNAME/clash-config-manager:latest
     container_name: clash-config-manager
-    image: clash-config-manager:latest
     restart: unless-stopped
+    
+    # 本地开发时取消下面的注释
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
     
     # 端口映射（只监听本地，通过Nginx反向代理访问）
     ports:

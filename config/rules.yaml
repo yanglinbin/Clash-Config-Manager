@@ -336,8 +336,10 @@ custom_rules:
   - DOMAIN-SUFFIX,sentry.io, 🤖AI平台
   - DOMAIN-SUFFIX,stripe.com, 🤖AI平台
 
-    # Copilot 规则
+  # Copilot 规则
   - DOMAIN-SUFFIX,copilot.microsoft.com, 🤖AI平台
+  - DOMAIN-SUFFIX,github.com, 🤖AI平台
+  - DOMAIN-SUFFIX,githubcopilot.com, 🤖AI平台
 
   # Netflix 规则
   - DOMAIN-KEYWORD,apiproxy-device-prod-nlb-, 🎬Netflix

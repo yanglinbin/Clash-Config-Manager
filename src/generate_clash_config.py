@@ -14,6 +14,9 @@ from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 
+# 确保日志目录存在
+Path("logs").mkdir(parents=True, exist_ok=True)
+
 # 配置日志
 logging.basicConfig(
     level=logging.INFO,
@@ -75,7 +78,7 @@ class ClashConfigGenerator:
                 providers[name.upper()] = url
         return providers
 
-    def get_regions(self) -> Dict[str, Dict[str, any]]:
+    def get_regions(self) -> Dict[str, Dict[str, Any]]:
         """获取地区配置"""
         regions = {}
         if "regions" in self.config:
@@ -120,7 +123,7 @@ class ClashConfigGenerator:
         return proxy_providers
 
     def generate_auto_groups(
-        self, providers: Dict[str, str], regions: Dict[str, Dict[str, any]]
+        self, providers: Dict[str, str], regions: Dict[str, Dict[str, Any]]
     ) -> List[Dict[str, Any]]:
         """生成自动选择组（跳过可能为空的组）"""
         auto_groups = []
@@ -208,7 +211,7 @@ class ClashConfigGenerator:
         return auto_groups
 
     def generate_merged_region_groups(
-        self, providers: Dict[str, str], regions: Dict[str, Dict[str, any]]
+        self, providers: Dict[str, str], regions: Dict[str, Dict[str, Any]]
     ) -> List[Dict[str, Any]]:
         """生成合并的地区组（所有提供者合并到一个地区组）"""
         merged_groups = []
@@ -271,7 +274,7 @@ class ClashConfigGenerator:
         return merged_groups
 
     def generate_custom_groups(
-        self, providers: Dict[str, str], regions: Dict[str, Dict[str, any]]
+        self, providers: Dict[str, str], regions: Dict[str, Dict[str, Any]]
     ) -> List[Dict[str, Any]]:
         """生成自定义节点组"""
         custom_groups = []
@@ -431,7 +434,7 @@ class ClashConfigGenerator:
     def generate_main_proxy_groups(
         self,
         providers: Dict[str, str],
-        regions: Dict[str, Dict[str, any]],
+        regions: Dict[str, Dict[str, Any]],
         custom_groups: List[Dict[str, Any]] = None,
         manual_select_group: Optional[Dict[str, Any]] = None,
     ) -> List[Dict[str, Any]]:
@@ -573,7 +576,7 @@ class ClashConfigGenerator:
         return rules
 
     def _generate_all_proxy_groups(
-        self, providers: Dict[str, str], regions: Dict[str, Dict[str, any]]
+        self, providers: Dict[str, str], regions: Dict[str, Dict[str, Any]]
     ) -> List[Dict[str, Any]]:
         """根据配置生成所有代理组"""
         # 检查是否使用合并的地区组

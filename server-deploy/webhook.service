@@ -1,0 +1,25 @@
+[Unit]
+Description=Webhook Service for Clash Config Manager
+Documentation=https://github.com/adnanh/webhook
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/webhooks
+ExecStart=/usr/local/bin/webhook -hooks /opt/webhooks/hooks.json -port 9000 -verbose -hotreload
+Restart=always
+RestartSec=10
+
+# 日志输出
+StandardOutput=append:/var/log/webhook.log
+StandardError=append:/var/log/webhook-error.log
+
+# 安全加固
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+
