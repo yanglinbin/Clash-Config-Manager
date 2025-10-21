@@ -1,20 +1,20 @@
 services:
   # Clash 配置管理器应用
   clash-config-manager:
-    # 使用 GitHub Container Registry 镜像（生产环境）
-    # 本地开发时可以使用: docker-compose up --build
-    image: ghcr.io/YOUR_GITHUB_USERNAME/clash-config-manager:latest
+    # 使用本地构建
+    # 如需使用已构建的镜像，注释掉 build 部分，启用下面的 image 配置
+    #image: clash-config-manager:latest
     container_name: clash-config-manager
     restart: unless-stopped
     
-    # 本地开发时取消下面的注释
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile
+    # 本地构建配置
+    build:
+       context: .
+       dockerfile: Dockerfile
     
-    # 端口映射（只监听本地，通过Nginx反向代理访问）
-    ports:
-      - "127.0.0.1:8080:8080"
+    # 不映射端口到主机（通过 docker-shared-net 网络中的 Nginx 代理访问）
+    # ports:
+    #   - "127.0.0.1:5000:5000"
     
     # 卷挂载
     volumes:
@@ -33,8 +33,8 @@ services:
     environment:
       # 时区设置
       - TZ=${TZ:-Asia/Shanghai}
-      # 应用端口
-      - APP_PORT=${APP_PORT:-8080}
+      # 应用端口（Flask 默认端口）
+      - APP_PORT=${APP_PORT:-5000}
       # 日志级别
       - LOG_LEVEL=${LOG_LEVEL:-info}
       # 更新间隔（秒）
@@ -44,7 +44,7 @@ services:
     
     # 健康检查
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/status"]
+      test: ["CMD", "curl", "-f", "http://localhost:5000/status"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -60,9 +60,9 @@ services:
     #       cpus: '0.25'
     #       memory: 128M
     
-    # 网络配置（使用默认bridge网络）
+    # 网络配置（使用共享网络，通过 Nginx 容器代理）
     networks:
-      - default
+      - docker-shared-net
     
     # 日志配置
     logging:
@@ -71,7 +71,7 @@ services:
         max-size: "10m"
         max-file: "3"
 
-# 使用默认网络
+# 使用外部共享网络
 networks:
-  default:
-    driver: bridge
+  docker-shared-net:
+    external: true

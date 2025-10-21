@@ -43,11 +43,9 @@ COPY --from=builder --chown=appuser:appuser /root/.local /home/appuser/.local
 # 复制应用代码
 COPY --chown=appuser:appuser main.py .
 COPY --chown=appuser:appuser src/ ./src/
-COPY --chown=appuser:appuser config/rules.yaml ./config/rules.yaml
-COPY --chown=appuser:appuser config/rules.schema.json ./config/rules.schema.json
-# 注意：config.ini 由用户通过 docker-compose.yml 卷挂载提供
 
 # 创建必要的目录并设置权限
+# 注意：config.ini 和 rules.yaml 由用户通过 docker-compose.yml 卷挂载提供
 RUN mkdir -p logs output backups config && \
     chown -R appuser:appuser ${APP_HOME}
 
@@ -58,14 +56,14 @@ USER appuser
 ENV PATH="/home/appuser/.local/bin:${PATH}" \
     PYTHONPATH="/home/appuser/.local/lib/python3.9/site-packages:${PYTHONPATH}"
 
-# 暴露端口
-EXPOSE 8080
+# 暴露端口（Flask 默认端口）
+EXPOSE 5000
 
 # 健康检查
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD curl -f http://localhost:8080/status || exit 1
+    CMD curl -f http://localhost:5000/status || exit 1
 
 # 启动应用
 # 使用 gunicorn 作为生产级 WSGI 服务器
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "2", "--threads", "4", "--timeout", "120", "--access-logfile", "logs/access.log", "--error-logfile", "logs/error.log", "src.app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "--threads", "4", "--timeout", "120", "--access-logfile", "logs/access.log", "--error-logfile", "logs/error.log", "src.app:app"]
 

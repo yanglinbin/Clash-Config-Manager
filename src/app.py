@@ -194,7 +194,7 @@ def index():
 def main():
     """主函数"""
     # 端口配置优先级：环境变量 > 默认值
-    port = int(os.environ.get("APP_PORT", 8080))
+    port = int(os.environ.get("APP_PORT", 5000))
     host = "0.0.0.0"  # Docker容器内需要监听所有接口
 
     port_source = "环境变量" if "APP_PORT" in os.environ else "默认值"

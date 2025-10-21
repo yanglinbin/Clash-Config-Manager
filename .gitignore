@@ -79,3 +79,6 @@ docker-volumes/
 *.tmp
 *.temp
 *.cache
+
+# ===== 文档 =====
+docs/

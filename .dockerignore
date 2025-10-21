@@ -52,8 +52,11 @@ Thumbs.db
 .env
 .env.local
 
-# 配置文件示例（不需要复制到镜像）
+# 配置文件（应通过 volume 挂载，不需要复制到镜像）
 config/*.example
+config/config.ini
+config/rules.yaml
+config/rules.schema.json
 
 # 测试相关
 tests/
@@ -63,3 +66,5 @@ test_*.py
 .coverage
 htmlcov/
 
+# 文档
+docs/
