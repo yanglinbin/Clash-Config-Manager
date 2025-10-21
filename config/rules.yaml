@@ -343,8 +343,8 @@ custom_rules:
   - DOMAIN-SUFFIX,githubcopilot.com, 🤖AI平台
 
   # Netflix 规则
-  - DOMAIN-KEYWORD,apiproxy-device-prod-nlb-, 🎬Netflix
-  - DOMAIN-KEYWORD,dualstack.apiproxy-, 🎬Netflix
+  - DOMAIN-KEYWORD,apiproxy-device-prod-nlb, 🎬Netflix
+  - DOMAIN-KEYWORD,dualstack.apiproxy, 🎬Netflix
   - DOMAIN-KEYWORD,netflixdnstest, 🎬Netflix
   - DOMAIN,netflix.com.edgesuite.net, 🎬Netflix
   - DOMAIN-SUFFIX,fast.com, 🎬Netflix
@@ -543,4 +543,5 @@ ruleset_rules:
   - RULE-SET,youtube,🎬YouTube
   - GEOIP,LAN,🌐全球直连
   - GEOIP,CN,🌐全球直连
+  - GEOSITE,geolocation-!cn,🚀海外代理
   - MATCH,🐟漏网之鱼
