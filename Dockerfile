@@ -10,8 +10,11 @@ WORKDIR /build
 # 复制依赖文件
 COPY requirements.txt .
 
-# 安装依赖到临时目录
-RUN pip install --no-cache-dir --user -r requirements.txt
+# 使用阿里云镜像源加速 pip 下载（国内服务器加速）
+RUN pip install --no-cache-dir --user \
+    -i https://mirrors.aliyun.com/pypi/simple/ \
+    --trusted-host mirrors.aliyun.com \
+    -r requirements.txt
 
 # ==================== 运行阶段 ====================
 FROM python:3.9-slim
@@ -21,6 +24,10 @@ ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     TZ=Asia/Shanghai \
     APP_HOME=/app
+
+# 配置阿里云镜像源加速 apt 下载
+RUN sed -i 's|http://deb.debian.org|http://mirrors.aliyun.com|g' /etc/apt/sources.list && \
+    sed -i 's|http://security.debian.org|http://mirrors.aliyun.com|g' /etc/apt/sources.list
 
 # 安装必要的系统工具
 RUN apt-get update && \
