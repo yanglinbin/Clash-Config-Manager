@@ -309,6 +309,7 @@ custom_rules:
 
   # cursor
   - DOMAIN-SUFFIX,cursor.sh, 🤖AI平台
+  - DOMAIN-SUFFIX,cursor.com, 🤖AI平台
   - PROCESS-NAME,cursor, 🤖AI平台
 
   # jetbrains ai
