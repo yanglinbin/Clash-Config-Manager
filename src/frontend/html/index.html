@@ -28,14 +28,14 @@
             <h3>🔌 API 接口</h3>
             <ul>
                 <li><code>GET /status</code> - 获取服务状态（JSON格式）</li>
-                <li><code>POST /manual-update</code> - 手动触发配置更新</li>
+                <li><code>POST /update-config</code> - 触发配置更新</li>
                 <li><code>GET /clash_profile.yaml</code> - 获取生成的配置文件</li>
             </ul>
         </div>
         
         <div class="status">
-            <h3>🎮 手动操作</h3>
-            <button onclick="manualUpdate()">🔄 手动更新配置</button>
+            <h3>🎮 操作</h3>
+            <button onclick="updateConfig()">🔄 更新配置</button>
             <button onclick="checkStatus()">📊 检查状态</button>
         </div>
         

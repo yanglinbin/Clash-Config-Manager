@@ -1,15 +1,15 @@
 // Clash Config Manager - 前端脚本
 
 /**
- * 手动更新配置
+ * 更新配置
  */
-function manualUpdate() {
+function updateConfig() {
     const resultDiv = document.getElementById('result');
     resultDiv.style.display = 'block';
     resultDiv.className = 'status info';
     resultDiv.innerHTML = '<p>⏳ 正在更新配置...</p>';
     
-    fetch('/manual-update', { method: 'POST' })
+    fetch('/update-config', { method: 'POST' })
         .then(response => response.json())
         .then(data => {
             resultDiv.className = 'status ' + (data.status === 'success' ? 'success' : 'error');

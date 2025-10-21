@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Clash Config Manager Web 应用
-提供配置状态查询和手动更新接口
+提供配置状态查询和配置更新接口
 """
 
 import os
@@ -123,11 +123,11 @@ def status():
     return jsonify(status_info)
 
 
-@app.route("/manual-update", methods=["POST"])
-def manual_update():
-    """手动触发配置更新"""
+@app.route("/update-config", methods=["POST"])
+def update_config():
+    """配置更新"""
     try:
-        logger.info("收到手动更新请求")
+        logger.info("更新请求")
 
         if config_manager.regenerate_config():
             config_manager.last_update = datetime.now()
@@ -151,7 +151,7 @@ def manual_update():
             )
 
     except Exception as e:
-        logger.error(f"手动更新异常: {e}")
+        logger.error(f"更新异常: {e}")
         return jsonify({"error": "Internal server error"}), 500
 
 
