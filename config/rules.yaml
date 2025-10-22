@@ -339,7 +339,6 @@ custom_rules:
 
   # Copilot 规则
   - DOMAIN-SUFFIX,copilot.microsoft.com, 🤖AI平台
-  - DOMAIN-SUFFIX,github.com, 🤖AI平台
   - DOMAIN-SUFFIX,githubcopilot.com, 🤖AI平台
 
   # Netflix 规则
