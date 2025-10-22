@@ -18,10 +18,8 @@ services:
     
     # 卷挂载
     volumes:
-      # 配置文件（必需）
-      - ./config/config.ini:/app/config/config.ini:ro
-      # 规则配置（可选，如需自定义）
-      - ./config/rules.yaml:/app/config/rules.yaml:ro
+      # 配置目录（挂载整个目录以解决文件更新问题）
+      - ./config:/app/config:ro
       # 输出目录（生成的配置文件）
       - ./output:/app/output
       # 日志目录
