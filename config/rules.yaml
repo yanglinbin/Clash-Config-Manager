@@ -175,7 +175,6 @@ proxy_groups:
 # 自定义规则
 custom_rules:
   #🚀海外代理
-  - DOMAIN,yilabao.top,🌐全球直连
   - DOMAIN-SUFFIX,geeks3d.com,🚀海外代理
 
   #🌐全球直连
